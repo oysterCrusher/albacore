@@ -1,8 +1,12 @@
 package uk.me.jadams.albacore.screens;
 
+import uk.me.jadams.albacore.components.PlayerInputComponent;
 import uk.me.jadams.albacore.components.PositionComponent;
 import uk.me.jadams.albacore.components.TextureComponent;
+import uk.me.jadams.albacore.components.VelocityComponent;
+import uk.me.jadams.albacore.helpers.Input;
 import uk.me.jadams.albacore.systems.MovementSystem;
+import uk.me.jadams.albacore.systems.PlayerInputSystem;
 import uk.me.jadams.albacore.systems.RenderSystem;
 
 import com.badlogic.ashley.core.Engine;
@@ -15,6 +19,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class GameScreen implements Screen {
 	
+	Input input;
 	Engine engine;
 
 	@Override
@@ -30,26 +35,31 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void show() {
-		Texture albacoreTexture = new Texture(Gdx.files.internal("albacore.png"));
+		input = new Input();
+		Gdx.input.setInputProcessor(input);
+		
+		Texture playerTexture = new Texture(Gdx.files.internal("player.png"));
 		
 		OrthographicCamera camera = new OrthographicCamera(800, 600);
 		camera.position.set(400, 300, 0);
 		
 		engine = new Engine();
 		
-		Entity entity = new Entity();
-		entity.add(new PositionComponent());
-		entity.add(new TextureComponent(new TextureRegion(albacoreTexture)));
-		engine.addEntity(entity);
+		Entity player = new Entity();
+		player.add(new PositionComponent());
+		player.add(new VelocityComponent());
+		player.add(new TextureComponent(new TextureRegion(playerTexture)));
+		player.add(new PlayerInputComponent(input));
+		engine.addEntity(player);
 		
-		System.out.println("adding movement system");
 		MovementSystem movementSystem = new MovementSystem();
 		engine.addSystem(movementSystem);
 		
-		System.out.println("adding render system");
+		PlayerInputSystem playerInputSystem = new PlayerInputSystem(camera);
+		engine.addSystem(playerInputSystem);
+		
 		RenderSystem renderSystem = new RenderSystem(camera);
 		engine.addSystem(renderSystem);
-		System.out.println("added render system");
 	}
 
 	@Override
