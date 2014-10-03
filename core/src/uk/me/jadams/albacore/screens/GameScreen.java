@@ -49,13 +49,13 @@ public class GameScreen implements Screen {
 		player.add(new PositionComponent());
 		player.add(new VelocityComponent());
 		player.add(new TextureComponent(new TextureRegion(playerTexture)));
-		player.add(new PlayerInputComponent(input));
+		player.add(new PlayerInputComponent());
 		engine.addEntity(player);
 		
 		MovementSystem movementSystem = new MovementSystem();
 		engine.addSystem(movementSystem);
 		
-		PlayerInputSystem playerInputSystem = new PlayerInputSystem(camera);
+		PlayerInputSystem playerInputSystem = new PlayerInputSystem(camera, input);
 		engine.addSystem(playerInputSystem);
 		
 		RenderSystem renderSystem = new RenderSystem(camera);

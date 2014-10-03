@@ -26,8 +26,8 @@ public class MovementSystem extends IteratingSystem {
 		position.y += velocity.y * deltaTime;
 		
 		// Reset the velocity back to zero?
-		velocity.x = 0;
-		velocity.y = 0;
+		velocity.x = 0f;
+		velocity.y = 0f;
 	}
 	
 }
