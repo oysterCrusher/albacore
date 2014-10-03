@@ -46,7 +46,14 @@ public class RenderSystem extends EntitySystem {
 			Entity e = entities.get(i);
 			position = pm.get(e);
 			texture = tm.get(e);
-			batch.draw(texture.region, position.x, position.y);
+			float width = texture.region.getRegionWidth();
+			float height = texture.region.getRegionHeight();
+			batch.draw(texture.region,
+					position.x - width * 0.5f, position.y - width * 0.5f,
+					width * 0.5f, width * 0.5f,
+					width, height,
+					1, 1,
+					position.angle, true);
 		}
 		batch.end();
 	}

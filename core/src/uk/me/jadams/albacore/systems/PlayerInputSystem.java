@@ -12,6 +12,7 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 public class PlayerInputSystem extends EntitySystem {
@@ -22,7 +23,6 @@ public class PlayerInputSystem extends EntitySystem {
 	private Input input;
 	
 	private ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
-	private ComponentMapper<VelocityComponent> vm = ComponentMapper.getFor(VelocityComponent.class);
 
 	public PlayerInputSystem(OrthographicCamera camera, Input input) {
 		this.camera = camera;
@@ -40,12 +40,11 @@ public class PlayerInputSystem extends EntitySystem {
 	@Override
 	public void update(float deltaTime) {
 		PositionComponent position;
-		VelocityComponent velocity;
+		Vector2 direction = new Vector2();
 		
 		for (int i = 0; i < entities.size(); i++) {
 			Entity e = entities.get(i);
 			position = pm.get(e);
-			velocity = vm.get(e);
 			
 			// Unproject mouse position to get angle between player position and mouse
 			Vector3 mouseCoords = new Vector3(input.getMouseX(), input.getMouseY(), 0);
@@ -53,9 +52,10 @@ public class PlayerInputSystem extends EntitySystem {
 			mouseCoords.sub(position.x, position.y, 0);
 			mouseCoords.nor();
 			
-			// Player wants to move in this direction
-			velocity.x += mouseCoords.x * 60f;
-			velocity.y += mouseCoords.y * 60f;
+			// Set position.angle to face the mouse 
+			direction.x = mouseCoords.x;
+			direction.y = mouseCoords.y;
+			position.angle = direction.angle();
 		}
 	}
 

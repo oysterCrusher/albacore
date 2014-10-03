@@ -41,7 +41,7 @@ public class GameScreen implements Screen {
 		Texture playerTexture = new Texture(Gdx.files.internal("player.png"));
 		
 		OrthographicCamera camera = new OrthographicCamera(800, 600);
-		camera.position.set(400, 300, 0);
+//		camera.position.set(400, 300, 0);
 		
 		engine = new Engine();
 		
