@@ -3,7 +3,7 @@ package uk.me.jadams.albacore.systems;
 import uk.me.jadams.albacore.components.PlayerInputComponent;
 import uk.me.jadams.albacore.components.PositionComponent;
 import uk.me.jadams.albacore.components.VelocityComponent;
-import uk.me.jadams.albacore.helpers.Input;
+import uk.me.jadams.albacore.helpers.Cursor;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
@@ -22,11 +22,14 @@ public class PlayerInputSystem extends EntitySystem {
 	private ImmutableArray<Entity> entities;
 	
 	private OrthographicCamera camera;
+	private Cursor cursor;
+	
 	private ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
 	private ComponentMapper<VelocityComponent> vm = ComponentMapper.getFor(VelocityComponent.class);
 
-	public PlayerInputSystem(OrthographicCamera camera, Input input) {
+	public PlayerInputSystem(OrthographicCamera camera, Cursor cursor) {
 		this.camera = camera;
+		this.cursor = cursor;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -51,7 +54,7 @@ public class PlayerInputSystem extends EntitySystem {
 			velocity = vm.get(e);
 			
 			// Unproject mouse position to get angle between player position and mouse
-			mouseCoords.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+			mouseCoords.set(cursor.getX(), cursor.getY(), 0);
 			camera.unproject(mouseCoords);
 			mouseCoords.sub(position.x, position.y, 0);
 			mouseCoords.nor();

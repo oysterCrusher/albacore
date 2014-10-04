@@ -6,6 +6,7 @@ import uk.me.jadams.albacore.components.SizeComponent;
 import uk.me.jadams.albacore.components.TextureComponent;
 import uk.me.jadams.albacore.components.VelocityComponent;
 import uk.me.jadams.albacore.helpers.Boundaries;
+import uk.me.jadams.albacore.helpers.Cursor;
 import uk.me.jadams.albacore.helpers.Input;
 import uk.me.jadams.albacore.systems.BoundaryCollisionSystem;
 import uk.me.jadams.albacore.systems.MovementSystem;
@@ -18,18 +19,28 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class GameScreen implements Screen {
 	
+	SpriteBatch batch;
+	
 	Input input;
 	Engine engine;
+	OrthographicCamera camera;
 	Boundaries gameBoundary;
+	Cursor cursor;
 
 	@Override
 	public void render(float delta) {
 		gameBoundary.render();
+		cursor.udpate();
 		engine.update(delta);
+		batch.begin();
+		batch.setProjectionMatrix(camera.combined);
+		cursor.render(batch);
+		batch.end();
 	}
 
 	@Override
@@ -40,12 +51,17 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void show() {
+		Texture playerTexture = new Texture(Gdx.files.internal("player.png"));
+		Texture cursorTexture = new Texture(Gdx.files.internal("cursor.png"));
+		
+		batch = new SpriteBatch();
+		
+		cursor = new Cursor(cursorTexture);
+		Gdx.input.setCursorCatched(true);
 		input = new Input();
 		Gdx.input.setInputProcessor(input);
 		
-		Texture playerTexture = new Texture(Gdx.files.internal("player.png"));
-		
-		OrthographicCamera camera = new OrthographicCamera(1280, 720);
+		camera = new OrthographicCamera(1280, 720);
 		camera.position.set(1280f * 0.5f, 720f * 0.5f, 0f);
 
 		gameBoundary = new Boundaries(camera);
@@ -60,7 +76,7 @@ public class GameScreen implements Screen {
 		player.add(new SizeComponent(32f));
 		engine.addEntity(player);
 		
-		PlayerInputSystem playerInputSystem = new PlayerInputSystem(camera, input);
+		PlayerInputSystem playerInputSystem = new PlayerInputSystem(camera, cursor);
 		engine.addSystem(playerInputSystem);
 		
 		BoundaryCollisionSystem boundaryCollisionSystem = new BoundaryCollisionSystem(gameBoundary);
