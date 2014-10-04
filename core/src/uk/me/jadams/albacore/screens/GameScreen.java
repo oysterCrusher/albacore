@@ -4,7 +4,9 @@ import uk.me.jadams.albacore.components.PlayerInputComponent;
 import uk.me.jadams.albacore.components.PositionComponent;
 import uk.me.jadams.albacore.components.TextureComponent;
 import uk.me.jadams.albacore.components.VelocityComponent;
+import uk.me.jadams.albacore.helpers.Boundaries;
 import uk.me.jadams.albacore.helpers.Input;
+import uk.me.jadams.albacore.systems.BoundaryCollisionSystem;
 import uk.me.jadams.albacore.systems.MovementSystem;
 import uk.me.jadams.albacore.systems.PlayerInputSystem;
 import uk.me.jadams.albacore.systems.RenderSystem;
@@ -21,9 +23,11 @@ public class GameScreen implements Screen {
 	
 	Input input;
 	Engine engine;
+	Boundaries gameBoundary;
 
 	@Override
 	public void render(float delta) {
+		gameBoundary.render();
 		engine.update(delta);
 	}
 
@@ -40,8 +44,10 @@ public class GameScreen implements Screen {
 		
 		Texture playerTexture = new Texture(Gdx.files.internal("player.png"));
 		
-		OrthographicCamera camera = new OrthographicCamera(800, 600);
-//		camera.position.set(400, 300, 0);
+		OrthographicCamera camera = new OrthographicCamera(1280, 720);
+		camera.position.set(1280f * 0.5f, 720f * 0.5f, 0f);
+
+		gameBoundary = new Boundaries(camera);
 		
 		engine = new Engine();
 		
@@ -52,11 +58,14 @@ public class GameScreen implements Screen {
 		player.add(new PlayerInputComponent());
 		engine.addEntity(player);
 		
-		MovementSystem movementSystem = new MovementSystem();
-		engine.addSystem(movementSystem);
-		
 		PlayerInputSystem playerInputSystem = new PlayerInputSystem(camera, input);
 		engine.addSystem(playerInputSystem);
+		
+		BoundaryCollisionSystem boundaryCollisionSystem = new BoundaryCollisionSystem(gameBoundary);
+		engine.addSystem(boundaryCollisionSystem);
+		
+		MovementSystem movementSystem = new MovementSystem();
+		engine.addSystem(movementSystem);
 		
 		RenderSystem renderSystem = new RenderSystem(camera);
 		engine.addSystem(renderSystem);
