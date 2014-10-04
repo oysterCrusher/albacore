@@ -1,6 +1,7 @@
 package uk.me.jadams.albacore.systems;
 
 import uk.me.jadams.albacore.components.PositionComponent;
+import uk.me.jadams.albacore.components.SizeComponent;
 import uk.me.jadams.albacore.components.TextureComponent;
 
 import com.badlogic.ashley.core.ComponentMapper;
@@ -21,6 +22,7 @@ public class RenderSystem extends EntitySystem {
 	
 	private ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
 	private ComponentMapper<TextureComponent> tm = ComponentMapper.getFor(TextureComponent.class);
+	private ComponentMapper<SizeComponent> sm = ComponentMapper.getFor(SizeComponent.class);
 
 	public RenderSystem(OrthographicCamera camera) {
 		this.camera = camera;
@@ -30,13 +32,16 @@ public class RenderSystem extends EntitySystem {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void addedToEngine(Engine engine) {
-		entities = engine.getEntitiesFor(Family.getFor(PositionComponent.class, TextureComponent.class));
+		entities = engine.getEntitiesFor(Family.getFor(PositionComponent.class,
+				TextureComponent.class,
+				SizeComponent.class));
 	}
 	
 	@Override
 	public void update(float deltaTime) {
 		PositionComponent position;
 		TextureComponent texture;
+		SizeComponent size;
 		
 		camera.update();
 		
@@ -46,12 +51,11 @@ public class RenderSystem extends EntitySystem {
 			Entity e = entities.get(i);
 			position = pm.get(e);
 			texture = tm.get(e);
-			float width = texture.region.getRegionWidth();
-			float height = texture.region.getRegionHeight();
+			size = sm.get(e);
 			batch.draw(texture.region,
-					position.x - width * 0.5f, position.y - width * 0.5f,
-					width * 0.5f, width * 0.5f,
-					width, height,
+					position.x - size.size * 0.5f, position.y - size.size * 0.5f,
+					size.size * 0.5f, size.size * 0.5f,
+					size.size, size.size,
 					1, 1,
 					position.angle, true);
 		}

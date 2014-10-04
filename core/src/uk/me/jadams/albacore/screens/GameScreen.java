@@ -2,6 +2,7 @@ package uk.me.jadams.albacore.screens;
 
 import uk.me.jadams.albacore.components.PlayerInputComponent;
 import uk.me.jadams.albacore.components.PositionComponent;
+import uk.me.jadams.albacore.components.SizeComponent;
 import uk.me.jadams.albacore.components.TextureComponent;
 import uk.me.jadams.albacore.components.VelocityComponent;
 import uk.me.jadams.albacore.helpers.Boundaries;
@@ -56,6 +57,7 @@ public class GameScreen implements Screen {
 		player.add(new VelocityComponent());
 		player.add(new TextureComponent(new TextureRegion(playerTexture)));
 		player.add(new PlayerInputComponent());
+		player.add(new SizeComponent(32f));
 		engine.addEntity(player);
 		
 		PlayerInputSystem playerInputSystem = new PlayerInputSystem(camera, input);

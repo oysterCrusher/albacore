@@ -1,6 +1,7 @@
 package uk.me.jadams.albacore.systems;
 
 import uk.me.jadams.albacore.components.PositionComponent;
+import uk.me.jadams.albacore.components.SizeComponent;
 import uk.me.jadams.albacore.components.VelocityComponent;
 import uk.me.jadams.albacore.helpers.Boundaries;
 
@@ -15,6 +16,7 @@ public class BoundaryCollisionSystem extends IteratingSystem {
 	
 	private ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
 	private ComponentMapper<VelocityComponent> vm = ComponentMapper.getFor(VelocityComponent.class);
+	private ComponentMapper<SizeComponent> sm = ComponentMapper.getFor(SizeComponent.class);
 
 	@SuppressWarnings("unchecked")
 	public BoundaryCollisionSystem(Boundaries boundary) {
@@ -26,31 +28,32 @@ public class BoundaryCollisionSystem extends IteratingSystem {
 	public void processEntity(Entity entity, float deltaTime) {
 		PositionComponent position = pm.get(entity);
 		VelocityComponent velocity = vm.get(entity);
+		SizeComponent size = sm.get(entity);
+		float radius = size.size * 0.5f;
 
 		if (velocity.x < 0) {
-			if (position.x + velocity.x * deltaTime <= boundary.getLeft()) {
-				velocity.x = (boundary.getLeft() - position.x) / deltaTime;
+			if (position.x - radius + velocity.x * deltaTime <= boundary.getLeft()) {
+				velocity.x = (boundary.getLeft() - position.x + radius) / deltaTime;
 			}
 		}
 		
 		if (velocity.x > 0) {
-			if (position.x + velocity.x * deltaTime >= boundary.getRight()) {
-				velocity.x = (boundary.getRight() - position.x) / deltaTime;
+			if (position.x + radius + velocity.x * deltaTime >= boundary.getRight()) {
+				velocity.x = (boundary.getRight() - position.x - radius) / deltaTime;
 			}
 		}
 		
 		if (velocity.y < 0) {
-			if (position.y + velocity.y * deltaTime <= boundary.getBottom()) {
-				velocity.y = (boundary.getBottom() - position.y) / deltaTime;
+			if (position.y - radius + velocity.y * deltaTime <= boundary.getBottom()) {
+				velocity.y = (boundary.getBottom() - position.y + radius) / deltaTime;
 			}
 		}
 		
 		if (velocity.y > 0) {
-			if (position.y + velocity.y * deltaTime >= boundary.getTop()) {
-				velocity.y = (boundary.getTop() - position.y) / deltaTime;
+			if (position.y + radius + velocity.y * deltaTime >= boundary.getTop()) {
+				velocity.y = (boundary.getTop() - position.y - radius) / deltaTime;
 			}
-		}
-		
+		}		
 	}
 
 }
