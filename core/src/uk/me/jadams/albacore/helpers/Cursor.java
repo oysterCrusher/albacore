@@ -1,6 +1,5 @@
 package uk.me.jadams.albacore.helpers;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -34,13 +33,8 @@ public class Cursor {
 		this.y = y;
 	}
 	
-	public void udpate() {
-		x = Gdx.input.getX();
-		y = Gdx.input.getY();
-	}
-	
 	public void render(SpriteBatch batch) {
-		batch.draw(texture, x - radius, Gdx.graphics.getHeight() - (y + radius), radius * 2, radius * 2);
+		batch.draw(texture, x - radius, 720 - (y + radius), radius * 2, radius * 2);
 	}
 	
 }

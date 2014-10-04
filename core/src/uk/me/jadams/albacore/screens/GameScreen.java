@@ -35,7 +35,6 @@ public class GameScreen implements Screen {
 	@Override
 	public void render(float delta) {
 		gameBoundary.render();
-		cursor.udpate();
 		engine.update(delta);
 		batch.begin();
 		batch.setProjectionMatrix(camera.combined);
@@ -58,7 +57,7 @@ public class GameScreen implements Screen {
 		
 		cursor = new Cursor(cursorTexture);
 		Gdx.input.setCursorCatched(true);
-		input = new Input();
+		input = new Input(cursor);
 		Gdx.input.setInputProcessor(input);
 		
 		camera = new OrthographicCamera(1280, 720);
