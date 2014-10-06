@@ -1,5 +1,6 @@
 package uk.me.jadams.albacore.screens;
 
+import uk.me.jadams.albacore.components.AIMovementComponent;
 import uk.me.jadams.albacore.components.PlayerInputComponent;
 import uk.me.jadams.albacore.components.PositionComponent;
 import uk.me.jadams.albacore.components.SizeComponent;
@@ -9,6 +10,7 @@ import uk.me.jadams.albacore.components.WeaponComponent;
 import uk.me.jadams.albacore.helpers.Boundaries;
 import uk.me.jadams.albacore.helpers.Cursor;
 import uk.me.jadams.albacore.helpers.Input;
+import uk.me.jadams.albacore.systems.AIMovementSystem;
 import uk.me.jadams.albacore.systems.BoundaryCollisionSystem;
 import uk.me.jadams.albacore.systems.MovementSystem;
 import uk.me.jadams.albacore.systems.PlayerInputSystem;
@@ -19,12 +21,16 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class GameScreen implements Screen {
+	
+	// FPS logger for debug
+	FPSLogger fpsLogger;
 	
 	SpriteBatch batch;
 	
@@ -36,6 +42,7 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
+		fpsLogger.log();
 		gameBoundary.render();
 		engine.update(delta);
 		batch.begin();
@@ -52,7 +59,11 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void show() {
+		// FPS logger for debug
+		fpsLogger = new FPSLogger();
+		
 		Texture playerTexture = new Texture(Gdx.files.internal("player.png"));
+		Texture enemyTexture = new Texture(Gdx.files.internal("enemy.png"));
 		Texture cursorTexture = new Texture(Gdx.files.internal("cursor.png"));
 		
 		batch = new SpriteBatch();
@@ -70,6 +81,7 @@ public class GameScreen implements Screen {
 		
 		engine = new Engine();
 		
+		// Create the player entity
 		Entity player = new Entity();
 		player.add(new PositionComponent());
 		player.add(new VelocityComponent());
@@ -79,8 +91,28 @@ public class GameScreen implements Screen {
 		player.add(new WeaponComponent());
 		engine.addEntity(player);
 		
+		// Create a couple of enemy entities
+		Entity enemy = new Entity();
+		enemy.add(new PositionComponent(40, 680, 0));
+		enemy.add(new VelocityComponent());
+		enemy.add(new TextureComponent(new TextureRegion(enemyTexture)));
+		enemy.add(new SizeComponent(32f));
+		enemy.add(new AIMovementComponent());
+		engine.addEntity(enemy);
+		Entity enemy2 = new Entity();
+		enemy2.add(new PositionComponent(40, 40, 0));
+		enemy2.add(new VelocityComponent());
+		enemy2.add(new TextureComponent(new TextureRegion(enemyTexture)));
+		enemy2.add(new SizeComponent(32f));
+		enemy2.add(new AIMovementComponent());
+		engine.addEntity(enemy2);
+		
+		// Add all the systems. Order is important.		
 		PlayerInputSystem playerInputSystem = new PlayerInputSystem(camera, cursor);
 		engine.addSystem(playerInputSystem);
+		
+		AIMovementSystem AIMovementSystem = new AIMovementSystem(player);
+		engine.addSystem(AIMovementSystem);
 		
 		BoundaryCollisionSystem boundaryCollisionSystem = new BoundaryCollisionSystem(gameBoundary);
 		engine.addSystem(boundaryCollisionSystem);

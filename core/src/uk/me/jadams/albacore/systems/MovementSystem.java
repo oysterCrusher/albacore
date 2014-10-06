@@ -7,6 +7,7 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.math.Vector2;
 
 public class MovementSystem extends IteratingSystem {
 	
@@ -22,8 +23,15 @@ public class MovementSystem extends IteratingSystem {
 	public void processEntity(Entity entity, float deltaTime) {
 		PositionComponent position = pm.get(entity);
 		VelocityComponent velocity = vm.get(entity);
-		position.x += velocity.x * deltaTime;
-		position.y += velocity.y * deltaTime;
+		
+		// Cap the velocities. Velocity component probably needs a max velocity value.
+		Vector2 v = new Vector2(velocity.x, velocity.y);
+		v.clamp(0, 250);
+		velocity.x = v.x;
+		velocity.y = v.y;
+		
+		position.x += v.x * deltaTime;
+		position.y += v.y * deltaTime;
 	}
 	
 }
