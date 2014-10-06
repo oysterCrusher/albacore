@@ -6,4 +6,14 @@ public class PositionComponent extends Component {
 	public float x = 640f;
 	public float y = 360f;
 	public float angle = 0f;
+
+	public PositionComponent() {
+
+	}
+	
+	public PositionComponent(float x, float y, float angle) {
+		this.x = x;
+		this.y = y;
+		this.angle = angle;
+	}
 }

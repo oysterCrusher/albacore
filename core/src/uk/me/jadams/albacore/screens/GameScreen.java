@@ -5,6 +5,7 @@ import uk.me.jadams.albacore.components.PositionComponent;
 import uk.me.jadams.albacore.components.SizeComponent;
 import uk.me.jadams.albacore.components.TextureComponent;
 import uk.me.jadams.albacore.components.VelocityComponent;
+import uk.me.jadams.albacore.components.WeaponComponent;
 import uk.me.jadams.albacore.helpers.Boundaries;
 import uk.me.jadams.albacore.helpers.Cursor;
 import uk.me.jadams.albacore.helpers.Input;
@@ -12,6 +13,7 @@ import uk.me.jadams.albacore.systems.BoundaryCollisionSystem;
 import uk.me.jadams.albacore.systems.MovementSystem;
 import uk.me.jadams.albacore.systems.PlayerInputSystem;
 import uk.me.jadams.albacore.systems.RenderSystem;
+import uk.me.jadams.albacore.systems.ShootingSystem;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
@@ -58,6 +60,7 @@ public class GameScreen implements Screen {
 		cursor = new Cursor(cursorTexture);
 		Gdx.input.setCursorCatched(true);
 		input = new Input(cursor);
+//		Gdx.input.setCursorImage(pixmap, xHotspot, yHotspot);
 		Gdx.input.setInputProcessor(input);
 		
 		camera = new OrthographicCamera(1280, 720);
@@ -73,6 +76,7 @@ public class GameScreen implements Screen {
 		player.add(new TextureComponent(new TextureRegion(playerTexture)));
 		player.add(new PlayerInputComponent());
 		player.add(new SizeComponent(32f));
+		player.add(new WeaponComponent());
 		engine.addEntity(player);
 		
 		PlayerInputSystem playerInputSystem = new PlayerInputSystem(camera, cursor);
@@ -86,6 +90,9 @@ public class GameScreen implements Screen {
 		
 		RenderSystem renderSystem = new RenderSystem(camera);
 		engine.addSystem(renderSystem);
+		
+		ShootingSystem shootingSystem = new ShootingSystem();
+		engine.addSystem(shootingSystem);
 	}
 
 	@Override

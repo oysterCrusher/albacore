@@ -24,10 +24,6 @@ public class MovementSystem extends IteratingSystem {
 		VelocityComponent velocity = vm.get(entity);
 		position.x += velocity.x * deltaTime;
 		position.y += velocity.y * deltaTime;
-		
-		// Reset the velocity back to zero?
-		velocity.x = 0f;
-		velocity.y = 0f;
 	}
 	
 }

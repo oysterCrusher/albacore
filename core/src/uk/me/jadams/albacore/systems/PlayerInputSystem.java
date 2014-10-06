@@ -46,7 +46,7 @@ public class PlayerInputSystem extends EntitySystem {
 		VelocityComponent velocity;
 		Vector3 mouseCoords = new Vector3();
 		Vector2 direction = new Vector2();
-		Vector2 move = new Vector2();
+		Vector2 v = new Vector2();
 		
 		for (int i = 0; i < entities.size(); i++) {
 			Entity e = entities.get(i);
@@ -64,24 +64,28 @@ public class PlayerInputSystem extends EntitySystem {
 			direction.y = mouseCoords.y;
 			position.angle = direction.angle();
 			
+			// Reset velocity to zero, all velocity of player controlled entities is set here.
+			velocity.x = 0;
+			velocity.y = 0;
+			
 			// Add velocity in the direction of the wasd keys
-			move.set(0, 0);
+			v.set(0, 0);
 			if (Gdx.input.isKeyPressed(Keys.A)) {
-				move.x -= 150;
+				v.x -= 150;
 			}
 			if (Gdx.input.isKeyPressed(Keys.D)) {
-				move.x += 150;
+				v.x += 150;
 			}
 			if (Gdx.input.isKeyPressed(Keys.W)) {
-				move.y += 150;
+				v.y += 150;
 			}
 			if (Gdx.input.isKeyPressed(Keys.S)) {
-				move.y -= 150;
+				v.y -= 150;
 			}
-			if (move.len() != 0) {
-				move.nor();
-				velocity.x += move.x * 150;
-				velocity.y += move.y * 150;
+			if (v.len() != 0) {
+				v.nor();
+				velocity.x += v.x * 200;
+				velocity.y += v.y * 200;
 			}
 		}
 	}
