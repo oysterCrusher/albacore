@@ -24,6 +24,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
@@ -65,6 +66,8 @@ public class GameScreen implements Screen {
 		Texture playerTexture = new Texture(Gdx.files.internal("player.png"));
 		Texture enemyTexture = new Texture(Gdx.files.internal("enemy.png"));
 		Texture cursorTexture = new Texture(Gdx.files.internal("cursor.png"));
+		
+		playerTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		
 		batch = new SpriteBatch();
 		

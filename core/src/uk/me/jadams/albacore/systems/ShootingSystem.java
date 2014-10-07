@@ -57,15 +57,15 @@ public class ShootingSystem extends EntitySystem {
 				
 				VelocityComponent newBulletVelocity = new VelocityComponent();
 				float angleRad = (float) Math.toRadians(p.angle);
-				newBulletVelocity.x = (float) (400 * Math.cos(angleRad));
-				newBulletVelocity.y = (float) (400 * Math.sin(angleRad));
+				newBulletVelocity.x = (float) (800 * Math.cos(angleRad));
+				newBulletVelocity.y = (float) (800 * Math.sin(angleRad));
 				newBullet.add(newBulletVelocity);
 				
 				Texture bulletTexture = new Texture(Gdx.files.internal("bullet.png"));
 				TextureComponent newBulletTexture = new TextureComponent(new TextureRegion(bulletTexture));
 				newBullet.add(newBulletTexture);
 				
-				SizeComponent newBulletSize = new SizeComponent(5f);
+				SizeComponent newBulletSize = new SizeComponent(4f);
 				newBullet.add(newBulletSize);
 				
 				newBullet.add(new BulletComponent());

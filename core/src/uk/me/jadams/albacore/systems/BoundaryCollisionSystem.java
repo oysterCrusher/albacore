@@ -1,13 +1,13 @@
 package uk.me.jadams.albacore.systems;
 
 import uk.me.jadams.albacore.components.BulletComponent;
-import uk.me.jadams.albacore.components.PlayerInputComponent;
 import uk.me.jadams.albacore.components.PositionComponent;
 import uk.me.jadams.albacore.components.SizeComponent;
 import uk.me.jadams.albacore.components.VelocityComponent;
 import uk.me.jadams.albacore.helpers.Boundaries;
 
 import com.badlogic.ashley.core.ComponentMapper;
+import com.badlogic.ashley.core.ComponentType;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
@@ -39,8 +39,11 @@ public class BoundaryCollisionSystem extends EntitySystem {
 	public void addedToEngine(Engine engine) {
 		this.engine = engine;
 
-		players = engine.getEntitiesFor(Family.getFor(PlayerInputComponent.class,
-				PositionComponent.class, VelocityComponent.class, SizeComponent.class));
+		players = engine.getEntitiesFor(Family.getFor(
+				ComponentType.getBitsFor(PositionComponent.class,
+						VelocityComponent.class, SizeComponent.class),
+				ComponentType.getBitsFor(),
+				ComponentType.getBitsFor(BulletComponent.class)));
 		bullets =  engine.getEntitiesFor(Family.getFor(BulletComponent.class,
 				PositionComponent.class, VelocityComponent.class, SizeComponent.class));
 	}
@@ -52,7 +55,7 @@ public class BoundaryCollisionSystem extends EntitySystem {
 		SizeComponent size;
 		float radius;
 
-		// If a player is about to hit the boundary, limit the velocity to keep
+		// If a player or enemy is about to hit the boundary, limit the velocity to keep
 		// them inside the bounds.
 		for (int i = 0; i < players.size(); i++) {
 			Entity p = players.get(i);
@@ -70,7 +73,7 @@ public class BoundaryCollisionSystem extends EntitySystem {
 					velocity.x = (boundary.getRight() - position.x - radius) / deltaTime;
 				}
 			}
-			
+
 			if (velocity.y < 0) {
 				if (position.y - radius + velocity.y * deltaTime <= boundary.getBottom()) {
 					velocity.y = (boundary.getBottom() - position.y + radius) / deltaTime;
@@ -99,7 +102,7 @@ public class BoundaryCollisionSystem extends EntitySystem {
 					engine.removeEntity(b);
 				}
 			}
-			
+
 			if (velocity.y < 0) {
 				if (position.y - radius + velocity.y * deltaTime <= boundary.getBottom()) {
 					engine.removeEntity(b);

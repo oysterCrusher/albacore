@@ -15,7 +15,7 @@ public class Boundaries {
 	private Rectangle boundingRect;
 	private Texture boundaryTexture;
 	
-	private static float t = 2; // Thickness
+	private static float t = 4f; // Thickness
 	
 	public Boundaries(OrthographicCamera camera) {
 		this.camera = camera;
