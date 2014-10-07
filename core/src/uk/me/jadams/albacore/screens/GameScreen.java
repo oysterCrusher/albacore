@@ -12,6 +12,7 @@ import uk.me.jadams.albacore.helpers.Cursor;
 import uk.me.jadams.albacore.helpers.Input;
 import uk.me.jadams.albacore.systems.AIMovementSystem;
 import uk.me.jadams.albacore.systems.BoundaryCollisionSystem;
+import uk.me.jadams.albacore.systems.BulletCollisionSystem;
 import uk.me.jadams.albacore.systems.MovementSystem;
 import uk.me.jadams.albacore.systems.PlayerInputSystem;
 import uk.me.jadams.albacore.systems.RenderSystem;
@@ -122,9 +123,12 @@ public class GameScreen implements Screen {
 		
 		MovementSystem movementSystem = new MovementSystem();
 		engine.addSystem(movementSystem);
-		
+
 		RenderSystem renderSystem = new RenderSystem(camera);
 		engine.addSystem(renderSystem);
+		
+		BulletCollisionSystem bulletCollisionSystem = new BulletCollisionSystem();
+		engine.addSystem(bulletCollisionSystem);
 		
 		ShootingSystem shootingSystem = new ShootingSystem();
 		engine.addSystem(shootingSystem);
