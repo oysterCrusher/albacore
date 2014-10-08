@@ -10,4 +10,10 @@ public class VelocityComponent extends Component {
 	public VelocityComponent(float max) {
 		this.max = max;
 	}
+	
+	public VelocityComponent(float x, float y, float max) {
+		this.x = x;
+		this.y = y;
+		this.max = max;
+	}
 }

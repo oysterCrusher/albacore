@@ -30,19 +30,16 @@ public class Assets {
 		cursor = loadTexture("cursor.png");
 		boundary = loadTexture("boundary.png");
 		
-		playerAnimTexture = loadTexture("playerAnim.png");
-		playerAnim = new Animation(1f,
-				new TextureRegion(playerAnimTexture, 0, 0, 64, 64),
-				new TextureRegion(playerAnimTexture, 64, 0, 64, 64),
-				new TextureRegion(playerAnimTexture, 128, 0, 64, 64),
-				new TextureRegion(playerAnimTexture, 192, 0, 64, 64));
+		enemyExplodeTexture = loadTexture("enemy_dissipate.png");
+		TextureRegion[][] ttr = TextureRegion.split(enemyExplodeTexture, 64, 64);
+		TextureRegion[] enemyExplodeFrames = new TextureRegion[15];
+		for (int i = 0; i < 5; i++) {
+			for (int j = 0; j < 3; j++) {
+				enemyExplodeFrames[j + 3 * i] = ttr[i][j];
+			}
+		}
+		enemyExplodeAnim = new Animation(0.1f, enemyExplodeFrames);
 		
-		enemyExplodeTexture = loadTexture("enemy_explode.png");
-		enemyExplodeAnim = new Animation(0.2f,
-				new TextureRegion(enemyExplodeTexture, 0, 0, 64, 64),
-				new TextureRegion(enemyExplodeTexture, 64, 0, 64, 64),
-				new TextureRegion(enemyExplodeTexture, 128, 0, 64, 64),
-				new TextureRegion(enemyExplodeTexture, 192, 0, 64, 64));
 	}
 
 }

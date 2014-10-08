@@ -5,26 +5,24 @@ import uk.me.jadams.albacore.components.PositionComponent;
 import uk.me.jadams.albacore.components.SizeComponent;
 import uk.me.jadams.albacore.components.TextureComponent;
 import uk.me.jadams.albacore.components.VelocityComponent;
+import uk.me.jadams.albacore.helpers.Assets;
 import uk.me.jadams.albacore.helpers.Boundaries;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class EnemySpawnSystem extends EntitySystem {
 
 	private Engine engine;
 	private Boundaries bounds;
-	private Texture enemyTexture;
 
 	private float timer = 0f;
 	private float spawnTime = 3f;
 
-	public EnemySpawnSystem(Boundaries bounds, Texture enemyTexture) {
+	public EnemySpawnSystem(Boundaries bounds) {
 		this.bounds = bounds;
-		this.enemyTexture = enemyTexture;
 	}
 
 	@Override
@@ -47,7 +45,7 @@ public class EnemySpawnSystem extends EntitySystem {
 	}
 
 	private void spawnEnemy() {
-		float s = 24f;
+		float s = 40f;
 
 		Entity e = new Entity();
 
@@ -58,7 +56,7 @@ public class EnemySpawnSystem extends EntitySystem {
 		e.add(epc);
 
 		e.add(new VelocityComponent(250f));
-		e.add(new TextureComponent(new TextureRegion(enemyTexture)));
+		e.add(new TextureComponent(new TextureRegion(Assets.enemy)));
 		e.add(new SizeComponent(s));
 		e.add(new AIMovementComponent());
 

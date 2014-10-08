@@ -1,7 +1,5 @@
 package uk.me.jadams.albacore.screens;
 
-import uk.me.jadams.albacore.components.AIMovementComponent;
-import uk.me.jadams.albacore.components.AnimationComponent;
 import uk.me.jadams.albacore.components.PlayerInputComponent;
 import uk.me.jadams.albacore.components.PositionComponent;
 import uk.me.jadams.albacore.components.SizeComponent;
@@ -75,7 +73,7 @@ public class GameScreen implements Screen {
 		
 		batch = new SpriteBatch();
 		
-		cursor = new Cursor(Assets.cursor);
+		cursor = new Cursor();
 		Gdx.input.setCursorCatched(true);
 		input = new Input(cursor);
 //		Gdx.input.setCursorImage(pixmap, xHotspot, yHotspot);
@@ -92,28 +90,11 @@ public class GameScreen implements Screen {
 		Entity player = new Entity();
 		player.add(new PositionComponent());
 		player.add(new VelocityComponent(200f));
-		player.add(new TextureComponent());
-		player.add(new AnimationComponent(Assets.playerAnim));
+		player.add(new TextureComponent(new TextureRegion(Assets.player)));
 		player.add(new PlayerInputComponent());
 		player.add(new SizeComponent(32f));
 		player.add(new WeaponComponent());
 		engine.addEntity(player);
-		
-		// Create a couple of enemy entities
-		Entity enemy = new Entity();
-		enemy.add(new PositionComponent(40, 680, 0));
-		enemy.add(new VelocityComponent(250f));
-		enemy.add(new TextureComponent(new TextureRegion(Assets.enemy)));
-		enemy.add(new SizeComponent(24f));
-		enemy.add(new AIMovementComponent());
-		engine.addEntity(enemy);
-		Entity enemy2 = new Entity();
-		enemy2.add(new PositionComponent(40, 40, 0));
-		enemy2.add(new VelocityComponent(250f));
-		enemy2.add(new TextureComponent(new TextureRegion(Assets.enemy)));
-		enemy2.add(new SizeComponent(24f));
-		enemy2.add(new AIMovementComponent());
-		engine.addEntity(enemy2);
 		
 		// Add all the systems. Order is important.		
 		PlayerInputSystem playerInputSystem = new PlayerInputSystem(camera, cursor);
@@ -140,7 +121,7 @@ public class GameScreen implements Screen {
 		ShootingSystem shootingSystem = new ShootingSystem();
 		engine.addSystem(shootingSystem);
 		
-		EnemySpawnSystem enemySpawnSystem = new EnemySpawnSystem(gameBoundary, Assets.enemy);
+		EnemySpawnSystem enemySpawnSystem = new EnemySpawnSystem(gameBoundary);
 		engine.addSystem(enemySpawnSystem);
 		
 		LifetimeSystem lifetimeSystem = new LifetimeSystem();

@@ -7,6 +7,7 @@ import uk.me.jadams.albacore.components.LifetimeComponent;
 import uk.me.jadams.albacore.components.PositionComponent;
 import uk.me.jadams.albacore.components.SizeComponent;
 import uk.me.jadams.albacore.components.TextureComponent;
+import uk.me.jadams.albacore.components.VelocityComponent;
 import uk.me.jadams.albacore.helpers.Assets;
 
 import com.badlogic.ashley.core.ComponentMapper;
@@ -25,10 +26,12 @@ public class BulletCollisionSystem extends EntitySystem {
 	
 	private ComponentMapper<PositionComponent> pm;
 	private ComponentMapper<SizeComponent> sm; 
+	private ComponentMapper<VelocityComponent> vm;
 	
 	public BulletCollisionSystem() {
 		pm = ComponentMapper.getFor(PositionComponent.class);
 		sm = ComponentMapper.getFor(SizeComponent.class);
+		vm = ComponentMapper.getFor(VelocityComponent.class);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -48,6 +51,7 @@ public class BulletCollisionSystem extends EntitySystem {
 		PositionComponent bp;
 		SizeComponent es;
 		SizeComponent bs;
+		VelocityComponent ev;
 		float distsq;
 		
 		for (int i = 0; i < enemies.size(); i++) {
@@ -62,14 +66,16 @@ public class BulletCollisionSystem extends EntitySystem {
 				distsq = (ep.x - bp.x) * (ep.x - bp.x) + (ep.y - bp.y) * (ep.y - bp.y);
 				
 				if (distsq < (es.size + bs.size) * (es.size + bs.size) / 4f) {
+					ev = vm.get(e);
 					engine.removeEntity(e);
 					engine.removeEntity(b);
 					Entity explosion = new Entity();
 					explosion.add(new PositionComponent(ep.x, ep.y, ep.angle));
+					explosion.add(new VelocityComponent(ev.x, ev.y, 250f));
 					explosion.add(new AnimationComponent(Assets.enemyExplodeAnim));
 					explosion.add(new TextureComponent());
-					explosion.add(new SizeComponent(es.size * 2f));
-					explosion.add(new LifetimeComponent(0.8f));
+					explosion.add(new SizeComponent(64f));
+					explosion.add(new LifetimeComponent(1.5f));
 					engine.addEntity(explosion);
 					break;
 				}
