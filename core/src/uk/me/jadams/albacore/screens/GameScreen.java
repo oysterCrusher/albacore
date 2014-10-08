@@ -88,7 +88,7 @@ public class GameScreen implements Screen {
 		// Create the player entity
 		Entity player = new Entity();
 		player.add(new PositionComponent());
-		player.add(new VelocityComponent());
+		player.add(new VelocityComponent(200f));
 		player.add(new TextureComponent(new TextureRegion(Assets.player)));
 		player.add(new PlayerInputComponent());
 		player.add(new SizeComponent(32f));
@@ -98,14 +98,14 @@ public class GameScreen implements Screen {
 		// Create a couple of enemy entities
 		Entity enemy = new Entity();
 		enemy.add(new PositionComponent(40, 680, 0));
-		enemy.add(new VelocityComponent());
+		enemy.add(new VelocityComponent(250f));
 		enemy.add(new TextureComponent(new TextureRegion(Assets.enemy)));
 		enemy.add(new SizeComponent(24f));
 		enemy.add(new AIMovementComponent());
 		engine.addEntity(enemy);
 		Entity enemy2 = new Entity();
 		enemy2.add(new PositionComponent(40, 40, 0));
-		enemy2.add(new VelocityComponent());
+		enemy2.add(new VelocityComponent(250f));
 		enemy2.add(new TextureComponent(new TextureRegion(Assets.enemy)));
 		enemy2.add(new SizeComponent(24f));
 		enemy2.add(new AIMovementComponent());

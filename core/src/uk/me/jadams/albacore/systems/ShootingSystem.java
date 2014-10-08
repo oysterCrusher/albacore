@@ -55,7 +55,7 @@ public class ShootingSystem extends EntitySystem {
 				newBulletPosition.angle = p.angle;
 				newBullet.add(newBulletPosition);
 				
-				VelocityComponent newBulletVelocity = new VelocityComponent();
+				VelocityComponent newBulletVelocity = new VelocityComponent(600f);
 				float angleRad = (float) Math.toRadians(p.angle);
 				newBulletVelocity.x = (float) (800 * Math.cos(angleRad));
 				newBulletVelocity.y = (float) (800 * Math.sin(angleRad));

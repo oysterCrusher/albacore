@@ -57,7 +57,7 @@ public class EnemySpawnSystem extends EntitySystem {
 				0f);
 		e.add(epc);
 
-		e.add(new VelocityComponent());
+		e.add(new VelocityComponent(250f));
 		e.add(new TextureComponent(new TextureRegion(enemyTexture)));
 		e.add(new SizeComponent(s));
 		e.add(new AIMovementComponent());

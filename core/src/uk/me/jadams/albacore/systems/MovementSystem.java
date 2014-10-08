@@ -26,7 +26,7 @@ public class MovementSystem extends IteratingSystem {
 		
 		// Cap the velocities. Velocity component probably needs a max velocity value.
 		Vector2 v = new Vector2(velocity.x, velocity.y);
-		v.clamp(0, 250);
+		v.clamp(0, velocity.max);
 		velocity.x = v.x;
 		velocity.y = v.y;
 		
