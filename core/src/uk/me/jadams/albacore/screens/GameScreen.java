@@ -7,6 +7,7 @@ import uk.me.jadams.albacore.components.SizeComponent;
 import uk.me.jadams.albacore.components.TextureComponent;
 import uk.me.jadams.albacore.components.VelocityComponent;
 import uk.me.jadams.albacore.components.WeaponComponent;
+import uk.me.jadams.albacore.helpers.Assets;
 import uk.me.jadams.albacore.helpers.Boundaries;
 import uk.me.jadams.albacore.helpers.Cursor;
 import uk.me.jadams.albacore.helpers.Input;
@@ -25,8 +26,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
@@ -65,15 +64,15 @@ public class GameScreen implements Screen {
 		// FPS logger for debug
 		fpsLogger = new FPSLogger();
 		
-		Texture playerTexture = new Texture(Gdx.files.internal("player.png"));
-		Texture enemyTexture = new Texture(Gdx.files.internal("enemy.png"));
-		Texture cursorTexture = new Texture(Gdx.files.internal("cursor.png"));
+//		Texture playerTexture = new Texture(Gdx.files.internal("player.png"));
+//		Texture enemyTexture = new Texture(Gdx.files.internal("enemy.png"));
+//		Texture cursorTexture = new Texture(Gdx.files.internal("cursor.png"));
 		
-		playerTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+//		playerTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		
 		batch = new SpriteBatch();
 		
-		cursor = new Cursor(cursorTexture);
+		cursor = new Cursor(Assets.cursor);
 		Gdx.input.setCursorCatched(true);
 		input = new Input(cursor);
 //		Gdx.input.setCursorImage(pixmap, xHotspot, yHotspot);
@@ -90,7 +89,7 @@ public class GameScreen implements Screen {
 		Entity player = new Entity();
 		player.add(new PositionComponent());
 		player.add(new VelocityComponent());
-		player.add(new TextureComponent(new TextureRegion(playerTexture)));
+		player.add(new TextureComponent(new TextureRegion(Assets.player)));
 		player.add(new PlayerInputComponent());
 		player.add(new SizeComponent(32f));
 		player.add(new WeaponComponent());
@@ -100,14 +99,14 @@ public class GameScreen implements Screen {
 		Entity enemy = new Entity();
 		enemy.add(new PositionComponent(40, 680, 0));
 		enemy.add(new VelocityComponent());
-		enemy.add(new TextureComponent(new TextureRegion(enemyTexture)));
+		enemy.add(new TextureComponent(new TextureRegion(Assets.enemy)));
 		enemy.add(new SizeComponent(24f));
 		enemy.add(new AIMovementComponent());
 		engine.addEntity(enemy);
 		Entity enemy2 = new Entity();
 		enemy2.add(new PositionComponent(40, 40, 0));
 		enemy2.add(new VelocityComponent());
-		enemy2.add(new TextureComponent(new TextureRegion(enemyTexture)));
+		enemy2.add(new TextureComponent(new TextureRegion(Assets.enemy)));
 		enemy2.add(new SizeComponent(24f));
 		enemy2.add(new AIMovementComponent());
 		engine.addEntity(enemy2);
@@ -134,7 +133,7 @@ public class GameScreen implements Screen {
 		ShootingSystem shootingSystem = new ShootingSystem();
 		engine.addSystem(shootingSystem);
 		
-		EnemySpawnSystem enemySpawnSystem = new EnemySpawnSystem(gameBoundary, enemyTexture);
+		EnemySpawnSystem enemySpawnSystem = new EnemySpawnSystem(gameBoundary, Assets.enemy);
 		engine.addSystem(enemySpawnSystem);
 	}
 

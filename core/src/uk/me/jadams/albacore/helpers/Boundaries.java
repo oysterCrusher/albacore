@@ -1,6 +1,5 @@
 package uk.me.jadams.albacore.helpers;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -23,7 +22,7 @@ public class Boundaries {
 		batch = new SpriteBatch();
 		
 		boundingRect = new Rectangle(10, 10, 1260, 700);
-		boundaryTexture = new Texture(Gdx.files.internal("boundary.png"));
+		boundaryTexture = Assets.boundary;
 	}
 	
 	public float getLeft() {

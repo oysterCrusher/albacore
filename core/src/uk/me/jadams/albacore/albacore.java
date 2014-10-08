@@ -1,5 +1,6 @@
 package uk.me.jadams.albacore;
 
+import uk.me.jadams.albacore.helpers.Assets;
 import uk.me.jadams.albacore.screens.GameScreen;
 
 import com.badlogic.gdx.Game;
@@ -10,6 +11,7 @@ public class albacore extends Game {
 
 	@Override
 	public void create() {
+		Assets.load();
 		setScreen(new GameScreen());
 	}
 	

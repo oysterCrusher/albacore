@@ -6,6 +6,7 @@ import uk.me.jadams.albacore.components.SizeComponent;
 import uk.me.jadams.albacore.components.TextureComponent;
 import uk.me.jadams.albacore.components.VelocityComponent;
 import uk.me.jadams.albacore.components.WeaponComponent;
+import uk.me.jadams.albacore.helpers.Assets;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
@@ -15,7 +16,6 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class ShootingSystem extends EntitySystem {
@@ -61,8 +61,7 @@ public class ShootingSystem extends EntitySystem {
 				newBulletVelocity.y = (float) (800 * Math.sin(angleRad));
 				newBullet.add(newBulletVelocity);
 				
-				Texture bulletTexture = new Texture(Gdx.files.internal("bullet.png"));
-				TextureComponent newBulletTexture = new TextureComponent(new TextureRegion(bulletTexture));
+				TextureComponent newBulletTexture = new TextureComponent(new TextureRegion(Assets.bullet));
 				newBullet.add(newBulletTexture);
 				
 				SizeComponent newBulletSize = new SizeComponent(4f);
