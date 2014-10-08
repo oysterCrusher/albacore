@@ -1,9 +1,13 @@
 package uk.me.jadams.albacore.systems;
 
 import uk.me.jadams.albacore.components.AIMovementComponent;
+import uk.me.jadams.albacore.components.AnimationComponent;
 import uk.me.jadams.albacore.components.BulletComponent;
+import uk.me.jadams.albacore.components.LifetimeComponent;
 import uk.me.jadams.albacore.components.PositionComponent;
 import uk.me.jadams.albacore.components.SizeComponent;
+import uk.me.jadams.albacore.components.TextureComponent;
+import uk.me.jadams.albacore.helpers.Assets;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
@@ -60,6 +64,13 @@ public class BulletCollisionSystem extends EntitySystem {
 				if (distsq < (es.size + bs.size) * (es.size + bs.size) / 4f) {
 					engine.removeEntity(e);
 					engine.removeEntity(b);
+					Entity explosion = new Entity();
+					explosion.add(new PositionComponent(ep.x, ep.y, ep.angle));
+					explosion.add(new AnimationComponent(Assets.enemyExplodeAnim));
+					explosion.add(new TextureComponent());
+					explosion.add(new SizeComponent(es.size * 2f));
+					explosion.add(new LifetimeComponent(0.8f));
+					engine.addEntity(explosion);
 					break;
 				}
 			}

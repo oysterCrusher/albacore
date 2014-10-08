@@ -17,6 +17,7 @@ import uk.me.jadams.albacore.systems.AnimationSystem;
 import uk.me.jadams.albacore.systems.BoundaryCollisionSystem;
 import uk.me.jadams.albacore.systems.BulletCollisionSystem;
 import uk.me.jadams.albacore.systems.EnemySpawnSystem;
+import uk.me.jadams.albacore.systems.LifetimeSystem;
 import uk.me.jadams.albacore.systems.MovementSystem;
 import uk.me.jadams.albacore.systems.PlayerInputSystem;
 import uk.me.jadams.albacore.systems.RenderSystem;
@@ -141,6 +142,9 @@ public class GameScreen implements Screen {
 		
 		EnemySpawnSystem enemySpawnSystem = new EnemySpawnSystem(gameBoundary, Assets.enemy);
 		engine.addSystem(enemySpawnSystem);
+		
+		LifetimeSystem lifetimeSystem = new LifetimeSystem();
+		engine.addSystem(lifetimeSystem);
 	}
 
 	@Override
