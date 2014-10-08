@@ -52,6 +52,8 @@ public class RenderSystem extends EntitySystem {
 			position = pm.get(e);
 			texture = tm.get(e);
 			size = sm.get(e);
+			
+			// Just assume the texture is not null?			
 			batch.draw(texture.region,
 					position.x - size.size * 0.5f, position.y - size.size * 0.5f,
 					size.size * 0.5f, size.size * 0.5f,

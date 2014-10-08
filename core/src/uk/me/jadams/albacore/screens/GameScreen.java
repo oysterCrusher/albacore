@@ -1,6 +1,7 @@
 package uk.me.jadams.albacore.screens;
 
 import uk.me.jadams.albacore.components.AIMovementComponent;
+import uk.me.jadams.albacore.components.AnimationComponent;
 import uk.me.jadams.albacore.components.PlayerInputComponent;
 import uk.me.jadams.albacore.components.PositionComponent;
 import uk.me.jadams.albacore.components.SizeComponent;
@@ -12,6 +13,7 @@ import uk.me.jadams.albacore.helpers.Boundaries;
 import uk.me.jadams.albacore.helpers.Cursor;
 import uk.me.jadams.albacore.helpers.Input;
 import uk.me.jadams.albacore.systems.AIMovementSystem;
+import uk.me.jadams.albacore.systems.AnimationSystem;
 import uk.me.jadams.albacore.systems.BoundaryCollisionSystem;
 import uk.me.jadams.albacore.systems.BulletCollisionSystem;
 import uk.me.jadams.albacore.systems.EnemySpawnSystem;
@@ -89,7 +91,8 @@ public class GameScreen implements Screen {
 		Entity player = new Entity();
 		player.add(new PositionComponent());
 		player.add(new VelocityComponent(200f));
-		player.add(new TextureComponent(new TextureRegion(Assets.player)));
+		player.add(new TextureComponent());
+		player.add(new AnimationComponent(Assets.playerAnim));
 		player.add(new PlayerInputComponent());
 		player.add(new SizeComponent(32f));
 		player.add(new WeaponComponent());
@@ -123,6 +126,9 @@ public class GameScreen implements Screen {
 		
 		MovementSystem movementSystem = new MovementSystem();
 		engine.addSystem(movementSystem);
+		
+		AnimationSystem animationSystem = new AnimationSystem();
+		engine.addSystem(animationSystem);
 
 		RenderSystem renderSystem = new RenderSystem(camera);
 		engine.addSystem(renderSystem);
