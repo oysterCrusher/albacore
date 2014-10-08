@@ -42,6 +42,14 @@ public class Boundaries {
 		return boundingRect.y;
 	}
 	
+	public float getWidth() {
+		return boundingRect.width;
+	}
+	
+	public float getHeight() {
+		return boundingRect.height;
+	}
+	
 	public void render() {
 		batch.begin();
 		batch.setProjectionMatrix(camera.combined);

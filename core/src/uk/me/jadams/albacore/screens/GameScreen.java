@@ -13,6 +13,7 @@ import uk.me.jadams.albacore.helpers.Input;
 import uk.me.jadams.albacore.systems.AIMovementSystem;
 import uk.me.jadams.albacore.systems.BoundaryCollisionSystem;
 import uk.me.jadams.albacore.systems.BulletCollisionSystem;
+import uk.me.jadams.albacore.systems.EnemySpawnSystem;
 import uk.me.jadams.albacore.systems.MovementSystem;
 import uk.me.jadams.albacore.systems.PlayerInputSystem;
 import uk.me.jadams.albacore.systems.RenderSystem;
@@ -100,14 +101,14 @@ public class GameScreen implements Screen {
 		enemy.add(new PositionComponent(40, 680, 0));
 		enemy.add(new VelocityComponent());
 		enemy.add(new TextureComponent(new TextureRegion(enemyTexture)));
-		enemy.add(new SizeComponent(32f));
+		enemy.add(new SizeComponent(24f));
 		enemy.add(new AIMovementComponent());
 		engine.addEntity(enemy);
 		Entity enemy2 = new Entity();
 		enemy2.add(new PositionComponent(40, 40, 0));
 		enemy2.add(new VelocityComponent());
 		enemy2.add(new TextureComponent(new TextureRegion(enemyTexture)));
-		enemy2.add(new SizeComponent(32f));
+		enemy2.add(new SizeComponent(24f));
 		enemy2.add(new AIMovementComponent());
 		engine.addEntity(enemy2);
 		
@@ -132,6 +133,9 @@ public class GameScreen implements Screen {
 		
 		ShootingSystem shootingSystem = new ShootingSystem();
 		engine.addSystem(shootingSystem);
+		
+		EnemySpawnSystem enemySpawnSystem = new EnemySpawnSystem(gameBoundary, enemyTexture);
+		engine.addSystem(enemySpawnSystem);
 	}
 
 	@Override
