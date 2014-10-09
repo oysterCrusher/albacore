@@ -21,7 +21,7 @@ public class Boundaries {
 		
 		batch = new SpriteBatch();
 		
-		boundingRect = new Rectangle(10, 10, 1260, 700);
+		boundingRect = new Rectangle(120, 120, 1280 - 120 * 2, 720 - 120 * 2);
 		boundaryTexture = Assets.boundary;
 	}
 	

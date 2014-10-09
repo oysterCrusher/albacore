@@ -19,7 +19,7 @@ public class EnemySpawnSystem extends EntitySystem {
 	private Boundaries bounds;
 
 	private float timer = 0f;
-	private float spawnTime = 3f;
+	private float spawnTime = 2f;
 
 	public EnemySpawnSystem(Boundaries bounds) {
 		this.bounds = bounds;

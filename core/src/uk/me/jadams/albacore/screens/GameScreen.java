@@ -27,6 +27,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
@@ -42,14 +43,20 @@ public class GameScreen implements Screen {
 	OrthographicCamera camera;
 	Boundaries gameBoundary;
 	Cursor cursor;
+	
+	ParticleEffect particleEffect;
 
 	@Override
 	public void render(float delta) {
 		fpsLogger.log();
+		batch.setProjectionMatrix(camera.combined);
+		batch.begin();
+		particleEffect.draw(batch);
+		batch.end();
 		gameBoundary.render();
 		engine.update(delta);
 		batch.begin();
-		batch.setProjectionMatrix(camera.combined);
+		particleEffect.update(delta);		
 		cursor.render(batch);
 		batch.end();
 	}
@@ -65,11 +72,9 @@ public class GameScreen implements Screen {
 		// FPS logger for debug
 		fpsLogger = new FPSLogger();
 		
-//		Texture playerTexture = new Texture(Gdx.files.internal("player.png"));
-//		Texture enemyTexture = new Texture(Gdx.files.internal("enemy.png"));
-//		Texture cursorTexture = new Texture(Gdx.files.internal("cursor.png"));
-		
-//		playerTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		// Messing around with particles
+		particleEffect = new ParticleEffect();
+		particleEffect.load(Gdx.files.internal("blue_explosion.p"), Gdx.files.internal(""));
 		
 		batch = new SpriteBatch();
 		
@@ -115,7 +120,7 @@ public class GameScreen implements Screen {
 		RenderSystem renderSystem = new RenderSystem(camera);
 		engine.addSystem(renderSystem);
 		
-		BulletCollisionSystem bulletCollisionSystem = new BulletCollisionSystem();
+		BulletCollisionSystem bulletCollisionSystem = new BulletCollisionSystem(particleEffect);
 		engine.addSystem(bulletCollisionSystem);
 		
 		ShootingSystem shootingSystem = new ShootingSystem();
