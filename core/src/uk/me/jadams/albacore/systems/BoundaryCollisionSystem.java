@@ -1,13 +1,15 @@
 package uk.me.jadams.albacore.systems;
 
+import uk.me.jadams.albacore.components.AIMovementComponent;
 import uk.me.jadams.albacore.components.BulletComponent;
+import uk.me.jadams.albacore.components.PlayerInputComponent;
 import uk.me.jadams.albacore.components.PositionComponent;
 import uk.me.jadams.albacore.components.SizeComponent;
 import uk.me.jadams.albacore.components.VelocityComponent;
 import uk.me.jadams.albacore.helpers.Boundaries;
+import uk.me.jadams.albacore.helpers.Particles;
 
 import com.badlogic.ashley.core.ComponentMapper;
-import com.badlogic.ashley.core.ComponentType;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
@@ -18,16 +20,19 @@ public class BoundaryCollisionSystem extends EntitySystem {
 
 	private Boundaries boundary;
 	private Engine engine;
+	private Particles effects;
 
 	private ComponentMapper<PositionComponent> pm;
 	private ComponentMapper<VelocityComponent> vm;
 	private ComponentMapper<SizeComponent> sm;
 
+	private ImmutableArray<Entity> enemies;
 	private ImmutableArray<Entity> players;
 	private ImmutableArray<Entity> bullets;
 
-	public BoundaryCollisionSystem(Boundaries boundary) {
+	public BoundaryCollisionSystem(Boundaries boundary, Particles effects) {
 		this.boundary = boundary;
+		this.effects = effects;
 
 		pm = ComponentMapper.getFor(PositionComponent.class);
 		vm = ComponentMapper.getFor(VelocityComponent.class);
@@ -39,11 +44,11 @@ public class BoundaryCollisionSystem extends EntitySystem {
 	public void addedToEngine(Engine engine) {
 		this.engine = engine;
 
-		players = engine.getEntitiesFor(Family.getFor(
-				ComponentType.getBitsFor(PositionComponent.class,
-						VelocityComponent.class, SizeComponent.class),
-				ComponentType.getBitsFor(),
-				ComponentType.getBitsFor(BulletComponent.class)));
+		// Get all the enemies
+		enemies = engine.getEntitiesFor(Family.getFor(PositionComponent.class,
+				VelocityComponent.class, SizeComponent.class, AIMovementComponent.class));
+		players = engine.getEntitiesFor(Family.getFor(PositionComponent.class,
+				VelocityComponent.class, SizeComponent.class, PlayerInputComponent.class));
 		bullets =  engine.getEntitiesFor(Family.getFor(BulletComponent.class,
 				PositionComponent.class, VelocityComponent.class, SizeComponent.class));
 	}
@@ -83,6 +88,62 @@ public class BoundaryCollisionSystem extends EntitySystem {
 					velocity.y = (boundary.getTop() - position.y - radius) / deltaTime;
 				}
 			}
+		}
+
+		// As enemies pass through the boundary, fire off some particles
+		// There must be a nicer way of doing this.
+		for (int i = 0; i < enemies.size(); i++) {
+			Entity e = enemies.get(i);
+			position = pm.get(e);
+			velocity = vm.get(e);
+			size = sm.get(e);
+			radius = size.size * 0.5f;
+			float p0x;
+			float p1x;
+			float p0y;
+			float p1y;
+
+			p0x = position.x - radius;
+			p1x = position.x - radius + velocity.x * deltaTime;
+			p0y = position.y - radius;
+			p1y = position.y - radius + velocity.y * deltaTime;
+
+			// Right boundary
+			if (position.y < boundary.getTop() && position.y > boundary.getBottom()) {
+				if (p0x > boundary.getRight() && p1x <= boundary.getRight()) {
+					effects.start(boundary.getRight(), position.y);
+				} else if (p0x <= boundary.getRight() && p1x > boundary.getRight()) {
+					effects.start(boundary.getRight(), position.y);
+				}
+			}
+
+			// Left boundary
+			if (position.y < boundary.getTop() && position.y > boundary.getBottom()) {
+				if (p0x > boundary.getLeft() && p1x <= boundary.getLeft()) {
+					effects.start(boundary.getLeft(), position.y);
+				} else if (p0x <= boundary.getLeft() && p1x > boundary.getLeft()) {
+					effects.start(boundary.getLeft(), position.y);
+				}
+			}
+			
+			// Top boundary
+			if (position.x < boundary.getRight() && position.x > boundary.getLeft()) {
+				if (p0y > boundary.getTop() && p1y <= boundary.getTop()) {
+					effects.start(position.x, boundary.getTop());
+				} else if (p0y <= boundary.getTop() && p1y > boundary.getTop()) {
+					effects.start(position.x, boundary.getTop());
+				}
+			}
+			
+			// Bottom boundary
+			if (position.x < boundary.getRight() && position.x > boundary.getLeft()) {
+				if (p0y > boundary.getBottom() && p1y <= boundary.getBottom()) {
+					effects.start(position.x, boundary.getBottom());
+				} else if (p0y <= boundary.getBottom() && p1y > boundary.getBottom()) {
+					effects.start(position.x, boundary.getBottom());
+				}
+			}
+			
 		}
 
 		// For bullets, remove them if they collide with the boundary.

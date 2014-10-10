@@ -4,6 +4,7 @@ import uk.me.jadams.albacore.components.AIMovementComponent;
 import uk.me.jadams.albacore.components.BulletComponent;
 import uk.me.jadams.albacore.components.PositionComponent;
 import uk.me.jadams.albacore.components.SizeComponent;
+import uk.me.jadams.albacore.helpers.Particles;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
@@ -11,12 +12,11 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
-import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 
 public class BulletCollisionSystem extends EntitySystem {
 
 	private Engine engine;
-	private ParticleEffect particleEffect;
+	private Particles particleEffect;
 
 	private ImmutableArray<Entity> bullets;
 	private ImmutableArray<Entity> enemies;
@@ -24,8 +24,8 @@ public class BulletCollisionSystem extends EntitySystem {
 	private ComponentMapper<PositionComponent> pm;
 	private ComponentMapper<SizeComponent> sm; 
 
-	public BulletCollisionSystem(ParticleEffect particleEffect) {
-		this.particleEffect = particleEffect;
+	public BulletCollisionSystem(Particles largeBlue) {
+		this.particleEffect = largeBlue;
 		pm = ComponentMapper.getFor(PositionComponent.class);
 		sm = ComponentMapper.getFor(SizeComponent.class);
 	}
@@ -64,8 +64,7 @@ public class BulletCollisionSystem extends EntitySystem {
 					engine.removeEntity(e);
 					engine.removeEntity(b);
 
-					particleEffect.setPosition(ep.x, ep.y);
-					particleEffect.start();
+					particleEffect.start(ep.x, ep.y);
 
 					break;
 				}

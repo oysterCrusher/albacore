@@ -12,6 +12,7 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 
 public class EnemySpawnSystem extends EntitySystem {
 
@@ -45,17 +46,31 @@ public class EnemySpawnSystem extends EntitySystem {
 	}
 
 	private void spawnEnemy() {
-		float s = 40f;
+		float s = 36f;
 
 		Entity e = new Entity();
 
-		PositionComponent epc = new PositionComponent(
-				bounds.getLeft() + s + (float) Math.random() * (bounds.getWidth() - 2 * s),
-				bounds.getBottom() + s + (float) Math.random() * (bounds.getHeight() - 2 * s),
-				0f);
+		int edge = MathUtils.floor((float) (Math.random() * 4f));
+		float x = 0;
+		float y = 0;
+		if (edge == 0) {
+			x = -10f - s;
+			y = bounds.getBottom() + s + (float) Math.random() * (bounds.getHeight() - 2 * s);
+		} else if (edge == 1) {
+			x = 1280f + 10f + s;
+			y = bounds.getBottom() + s + (float) Math.random() * (bounds.getHeight() - 2 * s);
+		} else if (edge == 2) {
+			x = bounds.getLeft() + s + (float) Math.random() * (bounds.getWidth() - 2 * s);
+			y = -10f - s;
+		} else { 
+			x = bounds.getLeft() + s + (float) Math.random() * (bounds.getWidth() - 2 * s);
+			y = 720f + 10f + s;
+		}
+		
+		PositionComponent epc = new PositionComponent(x, y, 0f);
 		e.add(epc);
 
-		e.add(new VelocityComponent(250f));
+		e.add(new VelocityComponent(200f));
 		e.add(new TextureComponent(new TextureRegion(Assets.enemy)));
 		e.add(new SizeComponent(s));
 		e.add(new AIMovementComponent());

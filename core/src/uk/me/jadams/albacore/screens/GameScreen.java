@@ -10,6 +10,7 @@ import uk.me.jadams.albacore.helpers.Assets;
 import uk.me.jadams.albacore.helpers.Boundaries;
 import uk.me.jadams.albacore.helpers.Cursor;
 import uk.me.jadams.albacore.helpers.Input;
+import uk.me.jadams.albacore.helpers.Particles;
 import uk.me.jadams.albacore.systems.AIMovementSystem;
 import uk.me.jadams.albacore.systems.AnimationSystem;
 import uk.me.jadams.albacore.systems.BoundaryCollisionSystem;
@@ -27,7 +28,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
@@ -44,19 +44,20 @@ public class GameScreen implements Screen {
 	Boundaries gameBoundary;
 	Cursor cursor;
 	
-	ParticleEffect particleEffect;
-
+	Particles largeBlue;
+	Particles smallWhite;
+	
 	@Override
 	public void render(float delta) {
 		fpsLogger.log();
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
-		particleEffect.draw(batch);
+		smallWhite.render(batch, delta);
+		largeBlue.render(batch, delta);
 		batch.end();
 		gameBoundary.render();
 		engine.update(delta);
 		batch.begin();
-		particleEffect.update(delta);		
 		cursor.render(batch);
 		batch.end();
 	}
@@ -73,8 +74,8 @@ public class GameScreen implements Screen {
 		fpsLogger = new FPSLogger();
 		
 		// Messing around with particles
-		particleEffect = new ParticleEffect();
-		particleEffect.load(Gdx.files.internal("blue_explosion.p"), Gdx.files.internal(""));
+		largeBlue = new Particles("blue_explosion.p");
+		smallWhite = new Particles("white_puff.p");
 		
 		batch = new SpriteBatch();
 		
@@ -97,7 +98,7 @@ public class GameScreen implements Screen {
 		player.add(new VelocityComponent(200f));
 		player.add(new TextureComponent(new TextureRegion(Assets.player)));
 		player.add(new PlayerInputComponent());
-		player.add(new SizeComponent(32f));
+		player.add(new SizeComponent(28f));
 		player.add(new WeaponComponent());
 		engine.addEntity(player);
 		
@@ -108,7 +109,7 @@ public class GameScreen implements Screen {
 		AIMovementSystem AIMovementSystem = new AIMovementSystem(player);
 		engine.addSystem(AIMovementSystem);
 		
-		BoundaryCollisionSystem boundaryCollisionSystem = new BoundaryCollisionSystem(gameBoundary);
+		BoundaryCollisionSystem boundaryCollisionSystem = new BoundaryCollisionSystem(gameBoundary, smallWhite);
 		engine.addSystem(boundaryCollisionSystem);
 		
 		MovementSystem movementSystem = new MovementSystem();
@@ -120,7 +121,7 @@ public class GameScreen implements Screen {
 		RenderSystem renderSystem = new RenderSystem(camera);
 		engine.addSystem(renderSystem);
 		
-		BulletCollisionSystem bulletCollisionSystem = new BulletCollisionSystem(particleEffect);
+		BulletCollisionSystem bulletCollisionSystem = new BulletCollisionSystem(largeBlue);
 		engine.addSystem(bulletCollisionSystem);
 		
 		ShootingSystem shootingSystem = new ShootingSystem();
@@ -153,8 +154,8 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
-		
+		largeBlue.dispose();
+		smallWhite.dispose();
 	}
 
 }
