@@ -10,6 +10,7 @@ import uk.me.jadams.albacore.helpers.Assets;
 import uk.me.jadams.albacore.helpers.Boundaries;
 import uk.me.jadams.albacore.helpers.Cursor;
 import uk.me.jadams.albacore.helpers.Input;
+import uk.me.jadams.albacore.helpers.MemoryLogger;
 import uk.me.jadams.albacore.helpers.Particles;
 import uk.me.jadams.albacore.systems.AIMovementSystem;
 import uk.me.jadams.albacore.systems.AnimationSystem;
@@ -33,8 +34,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class GameScreen implements Screen {
 	
-	// FPS logger for debug
+	// Debug classes
 	FPSLogger fpsLogger;
+	MemoryLogger memLogger;
 	
 	SpriteBatch batch;
 	
@@ -50,13 +52,19 @@ public class GameScreen implements Screen {
 	@Override
 	public void render(float delta) {
 		fpsLogger.log();
+//		memLogger.log();
+		
 		batch.setProjectionMatrix(camera.combined);
+		
 		batch.begin();
 		smallWhite.render(batch, delta);
 		largeBlue.render(batch, delta);
 		batch.end();
+		
 		gameBoundary.render();
+		
 		engine.update(delta);
+		
 		batch.begin();
 		cursor.render(batch);
 		batch.end();
@@ -70,8 +78,9 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void show() {
-		// FPS logger for debug
+		
 		fpsLogger = new FPSLogger();
+		memLogger = new MemoryLogger();
 		
 		// Messing around with particles
 		largeBlue = new Particles("blue_explosion.p");
