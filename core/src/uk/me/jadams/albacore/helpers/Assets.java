@@ -22,5 +22,13 @@ public class Assets {
 		cursor = loadTexture("cursor.png");
 		boundary = loadTexture("boundary.png");
 	}
+	
+	public static void dispose() {
+		player.dispose();
+		enemy.dispose();
+		bullet.dispose();
+		cursor.dispose();
+		boundary.dispose();
+	}
 
 }

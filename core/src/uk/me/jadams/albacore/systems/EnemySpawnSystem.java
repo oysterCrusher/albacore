@@ -6,7 +6,7 @@ import uk.me.jadams.albacore.components.SizeComponent;
 import uk.me.jadams.albacore.components.TextureComponent;
 import uk.me.jadams.albacore.components.VelocityComponent;
 import uk.me.jadams.albacore.helpers.Assets;
-import uk.me.jadams.albacore.helpers.Boundaries;
+import uk.me.jadams.albacore.helpers.Boundary;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
@@ -17,12 +17,12 @@ import com.badlogic.gdx.math.MathUtils;
 public class EnemySpawnSystem extends EntitySystem {
 
 	private Engine engine;
-	private Boundaries bounds;
+	private Boundary bounds;
 
 	private float timer = 0f;
 	private float spawnTime = 2f;
 
-	public EnemySpawnSystem(Boundaries bounds) {
+	public EnemySpawnSystem(Boundary bounds) {
 		this.bounds = bounds;
 	}
 

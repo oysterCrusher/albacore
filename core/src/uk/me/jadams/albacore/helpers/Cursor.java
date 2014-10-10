@@ -4,15 +4,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Cursor {
 
-	private float x;
-	private float y;
-	private float radius;
-	
-	public Cursor() {
-		x = 0;
-		y = 0;
-		radius = 12;
-	}
+	private float x = 0f;
+	private float y = 0f;
+	private float size = 12f;
 	
 	public float getX() {
 		return x;
@@ -31,7 +25,7 @@ public class Cursor {
 	}
 	
 	public void render(SpriteBatch batch) {
-		batch.draw(Assets.cursor, x - radius, 720 - (y + radius), radius * 2, radius * 2);
+		batch.draw(Assets.cursor, x - size, 720 - (y + size), size * 2, size * 2);
 	}
 	
 }

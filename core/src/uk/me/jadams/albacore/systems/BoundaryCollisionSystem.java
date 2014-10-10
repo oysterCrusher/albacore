@@ -6,7 +6,7 @@ import uk.me.jadams.albacore.components.PlayerInputComponent;
 import uk.me.jadams.albacore.components.PositionComponent;
 import uk.me.jadams.albacore.components.SizeComponent;
 import uk.me.jadams.albacore.components.VelocityComponent;
-import uk.me.jadams.albacore.helpers.Boundaries;
+import uk.me.jadams.albacore.helpers.Boundary;
 import uk.me.jadams.albacore.helpers.Particles;
 
 import com.badlogic.ashley.core.ComponentMapper;
@@ -18,7 +18,7 @@ import com.badlogic.ashley.utils.ImmutableArray;
 
 public class BoundaryCollisionSystem extends EntitySystem {
 
-	private Boundaries boundary;
+	private Boundary boundary;
 	private Engine engine;
 	private Particles effects;
 
@@ -30,7 +30,7 @@ public class BoundaryCollisionSystem extends EntitySystem {
 	private ImmutableArray<Entity> players;
 	private ImmutableArray<Entity> bullets;
 
-	public BoundaryCollisionSystem(Boundaries boundary, Particles effects) {
+	public BoundaryCollisionSystem(Boundary boundary, Particles effects) {
 		this.boundary = boundary;
 		this.effects = effects;
 

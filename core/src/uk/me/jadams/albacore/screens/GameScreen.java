@@ -7,10 +7,9 @@ import uk.me.jadams.albacore.components.TextureComponent;
 import uk.me.jadams.albacore.components.VelocityComponent;
 import uk.me.jadams.albacore.components.WeaponComponent;
 import uk.me.jadams.albacore.helpers.Assets;
-import uk.me.jadams.albacore.helpers.Boundaries;
+import uk.me.jadams.albacore.helpers.Boundary;
 import uk.me.jadams.albacore.helpers.Cursor;
 import uk.me.jadams.albacore.helpers.Input;
-import uk.me.jadams.albacore.helpers.MemoryLogger;
 import uk.me.jadams.albacore.helpers.Particles;
 import uk.me.jadams.albacore.systems.AIMovementSystem;
 import uk.me.jadams.albacore.systems.AnimationSystem;
@@ -35,36 +34,31 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class GameScreen implements Screen {
 	
 	// Debug classes
-	FPSLogger fpsLogger;
-	MemoryLogger memLogger;
+	private FPSLogger fpsLogger;
+//	private MemoryLogger memLogger;
 	
-	SpriteBatch batch;
+	private SpriteBatch batch;
 	
-	Input input;
-	Engine engine;
-	OrthographicCamera camera;
-	Boundaries gameBoundary;
-	Cursor cursor;
+	private Input input;
+	private Engine engine;
+	private OrthographicCamera camera;
+	private Boundary gameBoundary;
+	private Cursor cursor;
 	
-	Particles largeBlue;
-	Particles smallWhite;
+	private Particles largeBlue;
+	private Particles smallWhite;
 	
 	@Override
 	public void render(float delta) {
 		fpsLogger.log();
-//		memLogger.log();
-		
-		batch.setProjectionMatrix(camera.combined);
-		
+//		memLogger.log();		
+		batch.setProjectionMatrix(camera.combined);		
 		batch.begin();
 		smallWhite.render(batch, delta);
 		largeBlue.render(batch, delta);
+		gameBoundary.render(batch);
 		batch.end();
-		
-		gameBoundary.render();
-		
 		engine.update(delta);
-		
 		batch.begin();
 		cursor.render(batch);
 		batch.end();
@@ -80,7 +74,7 @@ public class GameScreen implements Screen {
 	public void show() {
 		
 		fpsLogger = new FPSLogger();
-		memLogger = new MemoryLogger();
+//		memLogger = new MemoryLogger();
 		
 		// Messing around with particles
 		largeBlue = new Particles("blue_explosion.p");
@@ -94,11 +88,14 @@ public class GameScreen implements Screen {
 //		Gdx.input.setCursorImage(pixmap, xHotspot, yHotspot);
 		Gdx.input.setInputProcessor(input);
 		
+		// Make the camera viewport 1280x720 and move it such that the origin is the lower left corner
 		camera = new OrthographicCamera(1280, 720);
 		camera.position.set(1280f * 0.5f, 720f * 0.5f, 0f);
 
-		gameBoundary = new Boundaries(camera);
+		// Set the players boundary to a rectangle in the centre of the viewport
+		gameBoundary = new Boundary(120, 120, 1040, 480);
 		
+		// vroom vroom
 		engine = new Engine();
 		
 		// Create the player entity
@@ -165,6 +162,7 @@ public class GameScreen implements Screen {
 	public void dispose() {
 		largeBlue.dispose();
 		smallWhite.dispose();
+		Assets.dispose();
 	}
 
 }

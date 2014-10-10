@@ -1,27 +1,18 @@
 package uk.me.jadams.albacore.helpers;
 
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
-// The boundary enclosing the world that contains the player and all enemies. A rectangle.
-public class Boundaries {
-	
-	private SpriteBatch batch;
-	private OrthographicCamera camera;
+public class Boundary {
 
 	private Rectangle boundingRect;
 	private Texture boundaryTexture;
 	
-	private static float t = 4f; // Thickness
+	private static float t = 4f; // Draw thickness
 	
-	public Boundaries(OrthographicCamera camera) {
-		this.camera = camera;
-		
-		batch = new SpriteBatch();
-		
-		boundingRect = new Rectangle(120, 120, 1280 - 120 * 2, 720 - 120 * 2);
+	public Boundary(int x, int y, int w, int h) {
+		boundingRect = new Rectangle(x, y, w, h);
 		boundaryTexture = Assets.boundary;
 	}
 	
@@ -49,9 +40,7 @@ public class Boundaries {
 		return boundingRect.height;
 	}
 	
-	public void render() {
-		batch.begin();
-		batch.setProjectionMatrix(camera.combined);
+	public void render(SpriteBatch batch) {
 		// Left edge
 		batch.draw(boundaryTexture,
 				boundingRect.x - t, boundingRect.y - t,
@@ -76,7 +65,6 @@ public class Boundaries {
 				boundingRect.width, t,
 				0, 0,
 				1, 1);
-		batch.end();
 	}
 	
 }

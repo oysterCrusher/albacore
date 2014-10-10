@@ -19,14 +19,13 @@ public class AIMovementSystem extends EntitySystem {
 	
 	private ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
 	private ComponentMapper<VelocityComponent> vm = ComponentMapper.getFor(VelocityComponent.class);
-//	private ComponentMapper<AIMovementComponent> aimm = ComponentMapper.getFor(AIMovementComponent.class);
 	
 	public AIMovementSystem(Entity player) {
 		this.player = player;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
+	@SuppressWarnings("unchecked")
 	public void addedToEngine(Engine engine) {
 		entities = engine.getEntitiesFor(Family.getFor(PositionComponent.class, VelocityComponent.class,
 				AIMovementComponent.class));
@@ -45,17 +44,15 @@ public class AIMovementSystem extends EntitySystem {
 			position = pm.get(e);
 			velocity = vm.get(e);
 			playerPosition = pm.get(player);
-			
+	
+			// Simply accelerates the enemy towards the player 
 			direction.set(playerPosition.x, playerPosition.y);
 			direction.sub(position.x, position.y);
 			if (direction.len() > 1f) {
 				direction.nor();
 			}
-//			System.out.println(direction.x + ", " + direction.y);
-//			System.out.println("v = " + velocity.x + ", " + velocity.y);
 			velocity.x += direction.x * 10;
 			velocity.y += direction.y * 10;
-//			System.out.println("v = " + velocity.x + ", " + velocity.y);
 		}
 		
 	}
