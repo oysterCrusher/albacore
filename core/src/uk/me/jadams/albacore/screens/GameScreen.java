@@ -11,6 +11,7 @@ import uk.me.jadams.albacore.helpers.Boundary;
 import uk.me.jadams.albacore.helpers.Cursor;
 import uk.me.jadams.albacore.helpers.Input;
 import uk.me.jadams.albacore.helpers.Particles;
+import uk.me.jadams.albacore.helpers.Scoring;
 import uk.me.jadams.albacore.systems.AIMovementSystem;
 import uk.me.jadams.albacore.systems.AnimationSystem;
 import uk.me.jadams.albacore.systems.BoundaryCollisionSystem;
@@ -44,6 +45,7 @@ public class GameScreen implements Screen {
 	private OrthographicCamera camera;
 	private Boundary gameBoundary;
 	private Cursor cursor;
+	private Scoring scoring;
 	
 	private Particles largeBlue;
 	private Particles smallWhite;
@@ -52,10 +54,11 @@ public class GameScreen implements Screen {
 	public void render(float delta) {
 		fpsLogger.log();
 //		memLogger.log();		
-		batch.setProjectionMatrix(camera.combined);		
+		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		smallWhite.render(batch, delta);
 		largeBlue.render(batch, delta);
+		scoring.render(batch);
 		gameBoundary.render(batch);
 		batch.end();
 		engine.update(delta);
@@ -87,6 +90,8 @@ public class GameScreen implements Screen {
 		input = new Input(cursor);
 //		Gdx.input.setCursorImage(pixmap, xHotspot, yHotspot);
 		Gdx.input.setInputProcessor(input);
+		
+		scoring = new Scoring();
 		
 		// Make the camera viewport 1280x720 and move it such that the origin is the lower left corner
 		camera = new OrthographicCamera(1280, 720);
@@ -127,7 +132,7 @@ public class GameScreen implements Screen {
 		RenderSystem renderSystem = new RenderSystem(camera);
 		engine.addSystem(renderSystem);
 		
-		BulletCollisionSystem bulletCollisionSystem = new BulletCollisionSystem(largeBlue);
+		BulletCollisionSystem bulletCollisionSystem = new BulletCollisionSystem(largeBlue, scoring);
 		engine.addSystem(bulletCollisionSystem);
 		
 		ShootingSystem shootingSystem = new ShootingSystem();
