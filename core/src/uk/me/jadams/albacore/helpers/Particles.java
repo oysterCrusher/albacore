@@ -29,6 +29,8 @@ public class Particles {
 	public void render(SpriteBatch batch, float delta) {
 		for (PooledEffect e : effects) {
 			e.draw(batch, delta);
+		}
+		for (PooledEffect e : effects) {
 			if (e.isComplete()) {
 				effects.removeValue(e, true);
 				e.free();
