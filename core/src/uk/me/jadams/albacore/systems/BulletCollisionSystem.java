@@ -1,13 +1,14 @@
 package uk.me.jadams.albacore.systems;
 
-import uk.me.jadams.albacore.components.AIMovementComponent;
 import uk.me.jadams.albacore.components.BulletComponent;
+import uk.me.jadams.albacore.components.PlayerInputComponent;
 import uk.me.jadams.albacore.components.PositionComponent;
 import uk.me.jadams.albacore.components.SizeComponent;
 import uk.me.jadams.albacore.helpers.Particles;
 import uk.me.jadams.albacore.helpers.Scoring;
 
 import com.badlogic.ashley.core.ComponentMapper;
+import com.badlogic.ashley.core.ComponentType;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
@@ -39,7 +40,10 @@ public class BulletCollisionSystem extends EntitySystem {
 		this.engine = engine;
 
 		bullets = engine.getEntitiesFor(Family.getFor(BulletComponent.class));
-		enemies = engine.getEntitiesFor(Family.getFor(AIMovementComponent.class));
+		enemies = engine.getEntitiesFor(Family.getFor(
+				ComponentType.getBitsFor(PositionComponent.class, SizeComponent.class),
+				ComponentType.getBitsFor(),
+				ComponentType.getBitsFor(PlayerInputComponent.class, BulletComponent.class)));
 	}
 
 	@Override

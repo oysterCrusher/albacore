@@ -1,6 +1,5 @@
 package uk.me.jadams.albacore.systems;
 
-import uk.me.jadams.albacore.components.AIMovementComponent;
 import uk.me.jadams.albacore.components.BulletComponent;
 import uk.me.jadams.albacore.components.PlayerInputComponent;
 import uk.me.jadams.albacore.components.PositionComponent;
@@ -10,6 +9,7 @@ import uk.me.jadams.albacore.helpers.Boundary;
 import uk.me.jadams.albacore.helpers.Particles;
 
 import com.badlogic.ashley.core.ComponentMapper;
+import com.badlogic.ashley.core.ComponentType;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
@@ -45,8 +45,10 @@ public class BoundaryCollisionSystem extends EntitySystem {
 		this.engine = engine;
 
 		// Get all the enemies
-		enemies = engine.getEntitiesFor(Family.getFor(PositionComponent.class,
-				VelocityComponent.class, SizeComponent.class, AIMovementComponent.class));
+		enemies = engine.getEntitiesFor(Family.getFor(
+				ComponentType.getBitsFor(PositionComponent.class, SizeComponent.class),
+				ComponentType.getBitsFor(),
+				ComponentType.getBitsFor(PlayerInputComponent.class, BulletComponent.class)));
 		players = engine.getEntitiesFor(Family.getFor(PositionComponent.class,
 				VelocityComponent.class, SizeComponent.class, PlayerInputComponent.class));
 		bullets =  engine.getEntitiesFor(Family.getFor(BulletComponent.class,
@@ -60,7 +62,7 @@ public class BoundaryCollisionSystem extends EntitySystem {
 		SizeComponent size;
 		float radius;
 
-		// If a player or enemy is about to hit the boundary, limit the velocity to keep
+		// If the player is about to hit the boundary, limit the velocity to keep
 		// them inside the bounds.
 		for (int i = 0; i < players.size(); i++) {
 			Entity p = players.get(i);
@@ -103,10 +105,10 @@ public class BoundaryCollisionSystem extends EntitySystem {
 			float p0y;
 			float p1y;
 
-			p0x = position.x - radius;
-			p1x = position.x - radius + velocity.x * deltaTime;
-			p0y = position.y - radius;
-			p1y = position.y - radius + velocity.y * deltaTime;
+			p0x = position.x;
+			p1x = position.x + velocity.x * deltaTime;
+			p0y = position.y;
+			p1y = position.y + velocity.y * deltaTime;
 
 			// Right boundary
 			if (position.y < boundary.getTop() && position.y > boundary.getBottom()) {

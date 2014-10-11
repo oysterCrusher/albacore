@@ -19,8 +19,11 @@ public class EnemySpawnSystem extends EntitySystem {
 	private Engine engine;
 	private Boundary bounds;
 
-	private float timer = 0f;
-	private float spawnTime = 2f;
+	private float blueTimer = 0f;
+	private float blueSpawnTime = 3f;
+	
+	private float greenTimer = 0f;
+	private float greenSpawnTime = 4f;
 
 	public EnemySpawnSystem(Boundary bounds) {
 		this.bounds = bounds;
@@ -29,19 +32,26 @@ public class EnemySpawnSystem extends EntitySystem {
 	@Override
 	public void addedToEngine(Engine engine) {
 		this.engine = engine;
-		timer = spawnTime;
+		blueTimer = blueSpawnTime;
+		greenTimer = greenSpawnTime; 
 	}
 
 	@Override
 	public void update(float deltaTime) {
-		timer -= deltaTime;
-
-		if (timer <= 0f) {
-			spawnTime *= 0.98f;
-			timer = spawnTime;
+		blueTimer -= deltaTime;
+		if (blueTimer <= 0f) {
+			blueSpawnTime *= 0.98f;
+			blueTimer = blueSpawnTime;
 			spawnEnemy();
 			spawnEnemy();
 			spawnEnemy();
+		}
+		
+		greenTimer -= deltaTime;
+		if (greenTimer <= 0f) {
+			greenSpawnTime *= 0.98f;
+			greenTimer = greenSpawnTime;
+			spawnGreenWave(MathUtils.floor(MathUtils.random() * 4f));
 		}
 	}
 
@@ -76,6 +86,59 @@ public class EnemySpawnSystem extends EntitySystem {
 		e.add(new AIMovementComponent());
 
 		engine.addEntity(e);
+	}
+	
+	private void spawnGreenWave(int dir) {
+		float size = 36f;
+		float speed = 130f;
+		int n = 0;
+		float x, y, dx, dy, vx, vy;
+		
+		if (dir == 0) {
+			n = 10;
+			x = bounds.getLeft() + bounds.getWidth() / (n + 1);
+			y = 720f + size + 10f;
+			dx = bounds.getWidth() / (n + 1);
+			dy = 0;
+			vx = 0;
+			vy = -speed;
+		} else if (dir == 1){
+			n = 5; 
+			x = 1280f + size + 10f;
+			y = bounds.getBottom() + bounds.getHeight() / (n + 1);
+			dx = 0;
+			dy = bounds.getHeight() / (n + 1);
+			vx = -speed;
+			vy = 0;
+		} else if (dir == 2) {
+			n = 10;
+			x = bounds.getLeft() + bounds.getWidth() / (n + 1);
+			y = - size - 10f;
+			dx = bounds.getWidth() / (n + 1);
+			dy = 0;
+			vx = 0;
+			vy = speed;
+		} else if (dir == 3) {
+			n = 5;
+			x = - size - 10f;
+			y = bounds.getBottom() + bounds.getHeight() / (n + 1);
+			dx = 0;
+			dy = bounds.getHeight() / (n + 1);
+			vx = speed;
+			vy = 0;
+		} else {
+			return;
+		}
+		
+		for (int i = 0; i < n; i++) {
+			Entity e = new Entity();
+			e.add(new PositionComponent(x + i * dx, y + i * dy, 0));
+			e.add(new VelocityComponent(vx, vy, speed));
+			e.add(new SizeComponent(size));
+			e.add(new TextureComponent(new TextureRegion(Assets.enemyGreen)));
+			
+			engine.addEntity(e);
+		}
 	}
 
 }

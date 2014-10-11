@@ -1,11 +1,13 @@
 package uk.me.jadams.albacore.systems;
 
-import uk.me.jadams.albacore.components.AIMovementComponent;
+import uk.me.jadams.albacore.components.BulletComponent;
+import uk.me.jadams.albacore.components.PlayerInputComponent;
 import uk.me.jadams.albacore.components.PositionComponent;
 import uk.me.jadams.albacore.components.SizeComponent;
 import uk.me.jadams.albacore.screens.GameScreen;
 
 import com.badlogic.ashley.core.ComponentMapper;
+import com.badlogic.ashley.core.ComponentType;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
@@ -21,7 +23,10 @@ public class PlayerEnemyCollisionSystem extends IteratingSystem {
 	
 	@SuppressWarnings("unchecked")
 	public PlayerEnemyCollisionSystem(GameScreen game, Entity player) {
-		super(Family.getFor(PositionComponent.class, SizeComponent.class, AIMovementComponent.class));
+		super(Family.getFor(
+				ComponentType.getBitsFor(PositionComponent.class, SizeComponent.class),
+				ComponentType.getBitsFor(),
+				ComponentType.getBitsFor(PlayerInputComponent.class, BulletComponent.class)));
 		pm = ComponentMapper.getFor(PositionComponent.class);
 		sm = ComponentMapper.getFor(SizeComponent.class);
 		this.player = player;

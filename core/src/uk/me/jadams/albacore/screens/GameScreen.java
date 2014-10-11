@@ -21,6 +21,7 @@ import uk.me.jadams.albacore.systems.LifetimeSystem;
 import uk.me.jadams.albacore.systems.MovementSystem;
 import uk.me.jadams.albacore.systems.PlayerEnemyCollisionSystem;
 import uk.me.jadams.albacore.systems.PlayerInputSystem;
+import uk.me.jadams.albacore.systems.RemoveOutOfRangeSystem;
 import uk.me.jadams.albacore.systems.RenderSystem;
 import uk.me.jadams.albacore.systems.ShootingSystem;
 
@@ -148,6 +149,9 @@ public class GameScreen implements Screen {
 		
 		EnemySpawnSystem enemySpawnSystem = new EnemySpawnSystem(gameBoundary);
 		engine.addSystem(enemySpawnSystem);
+		
+		RemoveOutOfRangeSystem removeOutOfRangeSystem = new RemoveOutOfRangeSystem(engine);
+		engine.addSystem(removeOutOfRangeSystem);
 		
 		LifetimeSystem lifetimeSystem = new LifetimeSystem();
 		engine.addSystem(lifetimeSystem);
