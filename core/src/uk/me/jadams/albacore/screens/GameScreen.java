@@ -10,13 +10,16 @@ import uk.me.jadams.albacore.helpers.Assets;
 import uk.me.jadams.albacore.helpers.Boundary;
 import uk.me.jadams.albacore.helpers.Cursor;
 import uk.me.jadams.albacore.helpers.Input;
+import uk.me.jadams.albacore.helpers.ParticleExplosions;
 import uk.me.jadams.albacore.helpers.Particles;
 import uk.me.jadams.albacore.helpers.Scoring;
 import uk.me.jadams.albacore.systems.AIMovementSystem;
 import uk.me.jadams.albacore.systems.AnimationSystem;
 import uk.me.jadams.albacore.systems.BoundaryCollisionSystem;
 import uk.me.jadams.albacore.systems.BulletCollisionSystem;
+import uk.me.jadams.albacore.systems.CorpseRemovalSystem;
 import uk.me.jadams.albacore.systems.EnemySpawnSystem;
+import uk.me.jadams.albacore.systems.ExplosionSystem;
 import uk.me.jadams.albacore.systems.LifetimeSystem;
 import uk.me.jadams.albacore.systems.MovementSystem;
 import uk.me.jadams.albacore.systems.PlayerEnemyCollisionSystem;
@@ -51,8 +54,8 @@ public class GameScreen implements Screen {
 	private Cursor cursor;
 	private Scoring scoring;
 	
-	private Particles largeBlue;
 	private Particles smallWhite;
+	private ParticleExplosions particleExplosions;
 	
 	@Override
 	public void render(float delta) {
@@ -61,7 +64,7 @@ public class GameScreen implements Screen {
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		smallWhite.render(batch, delta);
-		largeBlue.render(batch, delta);
+		particleExplosions.render(batch, delta);
 		scoring.render(batch);
 		gameBoundary.render(batch);
 		batch.end();
@@ -86,8 +89,8 @@ public class GameScreen implements Screen {
 //		memLogger = new MemoryLogger();
 		
 		// Messing around with particles
-		largeBlue = new Particles("blue_explosion.p");
 		smallWhite = new Particles("white_puff.p");
+		particleExplosions = new ParticleExplosions();
 		
 		batch = new SpriteBatch();
 		
@@ -141,8 +144,11 @@ public class GameScreen implements Screen {
 		RenderSystem renderSystem = new RenderSystem(camera);
 		engine.addSystem(renderSystem);
 		
-		BulletCollisionSystem bulletCollisionSystem = new BulletCollisionSystem(largeBlue, scoring);
+		BulletCollisionSystem bulletCollisionSystem = new BulletCollisionSystem(scoring);
 		engine.addSystem(bulletCollisionSystem);
+		
+		ExplosionSystem explosionSystem = new ExplosionSystem(particleExplosions);
+		engine.addSystem(explosionSystem);
 		
 		ShootingSystem shootingSystem = new ShootingSystem();
 		engine.addSystem(shootingSystem);
@@ -155,6 +161,9 @@ public class GameScreen implements Screen {
 		
 		LifetimeSystem lifetimeSystem = new LifetimeSystem();
 		engine.addSystem(lifetimeSystem);
+		
+		CorpseRemovalSystem corpseRemoveSystem = new CorpseRemovalSystem(engine);
+		engine.addSystem(corpseRemoveSystem);
 	}
 
 	@Override
@@ -177,7 +186,7 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void dispose() {
-		largeBlue.dispose();
+		particleExplosions.dispose();
 		smallWhite.dispose();
 		Assets.dispose();
 	}

@@ -1,4 +1,4 @@
-enemyExplode
+purple_pent
 - Delay -
 active: false
 - Duration - 
@@ -6,12 +6,12 @@ lowMin: 40.0
 lowMax: 40.0
 - Count - 
 min: 100
-max: 1000
+max: 150
 - Emission - 
 lowMin: 100.0
 lowMax: 100.0
-highMin: 1000.0
-highMax: 1000.0
+highMin: 100.0
+highMax: 100.0
 relative: false
 scalingCount: 1
 scaling0: 1.0
@@ -69,8 +69,8 @@ timeline0: 0.0
 active: true
 lowMin: 0.0
 lowMax: 0.0
-highMin: 30.0
-highMax: 150.0
+highMin: 50.0
+highMax: 250.0
 relative: false
 scalingCount: 2
 scaling0: 1.0
@@ -106,9 +106,9 @@ timeline0: 0.0
 active: false
 - Tint - 
 colorsCount: 3
-colors0: 0.16078432
-colors1: 0.5058824
-colors2: 0.7254902
+colors0: 0.60784316
+colors1: 0.34901962
+colors2: 0.7137255
 timelineCount: 1
 timeline0: 0.0
 - Transparency - 
@@ -118,7 +118,7 @@ highMin: 1.0
 highMax: 1.0
 relative: false
 scalingCount: 2
-scaling0: 1.0
+scaling0: 0.5
 scaling1: 0.0
 timelineCount: 2
 timeline0: 0.0
@@ -131,4 +131,4 @@ additive: false
 behind: false
 premultipliedAlpha: false
 - Image Path -
-E:\Storage\Code\Albacore\albacore\core\assets\particle.png
+E:\Storage\Code\Albacore\albacore\core\assets\particle_pent.png

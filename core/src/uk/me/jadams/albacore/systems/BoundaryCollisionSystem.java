@@ -50,8 +50,7 @@ public class BoundaryCollisionSystem extends EntitySystem {
 		enemies = engine.getEntitiesFor(Family.getFor(
 				ComponentType.getBitsFor(PositionComponent.class, SizeComponent.class),
 				ComponentType.getBitsFor(),
-				ComponentType.getBitsFor(PlayerInputComponent.class, BulletComponent.class,
-						AIMovementBouncyComponent.class)));
+				ComponentType.getBitsFor(PlayerInputComponent.class, BulletComponent.class)));
 
 		// Enemies that bounce off the boundaries
 		enemiesBounce = engine.getEntitiesFor(Family.getFor(

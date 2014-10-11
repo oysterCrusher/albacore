@@ -2,12 +2,15 @@ package uk.me.jadams.albacore.systems;
 
 import uk.me.jadams.albacore.components.AIMovementBouncyComponent;
 import uk.me.jadams.albacore.components.AIMovementComponent;
+import uk.me.jadams.albacore.components.ExplodesComponent;
+import uk.me.jadams.albacore.components.HealthComponent;
 import uk.me.jadams.albacore.components.PositionComponent;
 import uk.me.jadams.albacore.components.SizeComponent;
 import uk.me.jadams.albacore.components.TextureComponent;
 import uk.me.jadams.albacore.components.VelocityComponent;
 import uk.me.jadams.albacore.helpers.Assets;
 import uk.me.jadams.albacore.helpers.Boundary;
+import uk.me.jadams.albacore.helpers.ParticleExplosions.ExplosionType;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
@@ -95,6 +98,8 @@ public class EnemySpawnSystem extends EntitySystem {
 		e.add(new TextureComponent(new TextureRegion(Assets.enemy)));
 		e.add(new SizeComponent(s));
 		e.add(new AIMovementComponent());
+		e.add(new HealthComponent());
+		e.add(new ExplodesComponent(ExplosionType.BLUE_HEX));
 
 		engine.addEntity(e);
 	}
@@ -147,6 +152,8 @@ public class EnemySpawnSystem extends EntitySystem {
 			e.add(new VelocityComponent(vx, vy, speed));
 			e.add(new SizeComponent(size));
 			e.add(new TextureComponent(new TextureRegion(Assets.enemyGreen)));
+			e.add(new ExplodesComponent(ExplosionType.GREEN_COG));
+			e.add(new HealthComponent());
 			
 			engine.addEntity(e);
 		}
@@ -185,6 +192,8 @@ public class EnemySpawnSystem extends EntitySystem {
 		e.add(new SizeComponent(36f));
 		e.add(new TextureComponent(new TextureRegion(Assets.enemyPurple)));
 		e.add(new AIMovementBouncyComponent());
+		e.add(new ExplodesComponent(ExplosionType.PURPLE_PENT));
+		e.add(new HealthComponent());
 		engine.addEntity(e);
 	}
 
