@@ -1,4 +1,4 @@
-green_cog
+red_circ
 - Delay -
 active: false
 - Duration - 
@@ -69,8 +69,8 @@ timeline0: 0.0
 active: true
 lowMin: 0.0
 lowMax: 0.0
-highMin: 30.0
-highMax: 150.0
+highMin: 50.0
+highMax: 250.0
 relative: false
 scalingCount: 2
 scaling0: 1.0
@@ -106,9 +106,9 @@ timeline0: 0.0
 active: false
 - Tint - 
 colorsCount: 3
-colors0: 0.18039216
-colors1: 0.8
-colors2: 0.44313726
+colors0: 0.90588236
+colors1: 0.29411766
+colors2: 0.23529412
 timelineCount: 1
 timeline0: 0.0
 - Transparency - 
@@ -118,7 +118,7 @@ highMin: 1.0
 highMax: 1.0
 relative: false
 scalingCount: 2
-scaling0: 1.0
+scaling0: 0.5
 scaling1: 0.0
 timelineCount: 2
 timeline0: 0.0
@@ -131,4 +131,4 @@ additive: false
 behind: false
 premultipliedAlpha: false
 - Image Path -
-E:\Storage\Code\Albacore\albacore\core\assets\particle_cog.png
+E:\Storage\Code\Albacore\albacore\core\assets\particle_circ.png

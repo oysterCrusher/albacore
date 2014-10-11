@@ -1,5 +1,6 @@
 package uk.me.jadams.albacore.systems;
 
+import uk.me.jadams.albacore.components.AIMovementBackstabComponent;
 import uk.me.jadams.albacore.components.AIMovementBouncyComponent;
 import uk.me.jadams.albacore.components.AIMovementComponent;
 import uk.me.jadams.albacore.components.ExplodesComponent;
@@ -24,13 +25,16 @@ public class EnemySpawnSystem extends EntitySystem {
 	private Boundary bounds;
 
 	private float blueTimer = 0f;
-	private float blueSpawnTime = 3f;
+	private float blueSpawnTime = 6f;
 	
 	private float greenTimer = 0f;
-	private float greenSpawnTime = 4f;
+	private float greenSpawnTime = 6f;
 	
 	private float purpleTimer = 0f;
-	private float purpleSpawnTime = 4f;
+	private float purpleSpawnTime = 6f;
+	
+	private float redTimer = 0f;
+	private float redSpawnTime = 6f;
 
 	public EnemySpawnSystem(Boundary bounds) {
 		this.bounds = bounds;
@@ -39,8 +43,10 @@ public class EnemySpawnSystem extends EntitySystem {
 	@Override
 	public void addedToEngine(Engine engine) {
 		this.engine = engine;
-		blueTimer = blueSpawnTime;
-		greenTimer = greenSpawnTime; 
+		blueTimer = 1f;
+		greenTimer = 2f;
+		purpleTimer = 3f;
+		redTimer = 4f;
 	}
 
 	@Override
@@ -67,6 +73,13 @@ public class EnemySpawnSystem extends EntitySystem {
 			purpleTimer = purpleSpawnTime;
 			spawnPurpleWave();
 		}
+		
+		redTimer -= deltaTime;
+		if (redTimer <= 0f) {
+			redSpawnTime *= 0.98f;
+			redTimer = redSpawnTime;
+			spawnRedWave();
+		}
 	}
 
 	private void spawnEnemy() {
@@ -90,7 +103,6 @@ public class EnemySpawnSystem extends EntitySystem {
 			x = bounds.getLeft() + s + (float) Math.random() * (bounds.getWidth() - 2 * s);
 			y = 720f + 10f + s;
 		}
-		
 		PositionComponent epc = new PositionComponent(x, y, 0f);
 		e.add(epc);
 
@@ -197,4 +209,39 @@ public class EnemySpawnSystem extends EntitySystem {
 		engine.addEntity(e);
 	}
 
+	private void spawnRedWave() {
+		float size = 36f;
+		float x = 0;
+		float y = 0;
+		float dist = MathUtils.random(1280f * 2f + 720 * 2f);
+		if (dist <= 1280f) {
+			x = dist;
+			y = - 10f - size; 
+		} else if (dist <= 1280f + 720f) {
+			x = 1280f + 10f + size;
+			y = dist - 720f;
+		} else if (dist <= 1280f * 2f + 720f) {
+			x = dist - 1280f - 720f;
+			y = 720f + 10f + size;
+		} else if (dist <= 1280f * 2f + 720 * 2f) {
+			x = -10f - size;
+			y = dist - 1280f * 2f - 720f;
+		} else {
+			return;
+		}
+		spawnRed(x, y);
+	}
+	
+	private void spawnRed(float x, float y) {
+		Entity e = new Entity();
+		e.add(new PositionComponent(x, y, 0));
+		e.add(new VelocityComponent(200f));
+		e.add(new SizeComponent(36f));
+		e.add(new TextureComponent(new TextureRegion(Assets.enemyRed)));
+		e.add(new AIMovementBackstabComponent());
+		e.add(new ExplodesComponent(ExplosionType.REC_CIRC));
+		e.add(new HealthComponent());
+		engine.addEntity(e);
+	}
+	
 }

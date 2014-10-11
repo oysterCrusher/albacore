@@ -1,5 +1,6 @@
 package uk.me.jadams.albacore.systems;
 
+import uk.me.jadams.albacore.components.AIMovementBackstabComponent;
 import uk.me.jadams.albacore.components.AIMovementComponent;
 import uk.me.jadams.albacore.components.PositionComponent;
 import uk.me.jadams.albacore.components.VelocityComponent;
@@ -14,7 +15,8 @@ import com.badlogic.gdx.math.Vector2;
 
 public class AIMovementSystem extends EntitySystem {
 
-	private ImmutableArray<Entity> entities;
+	private ImmutableArray<Entity> enemiesFollow;
+	private ImmutableArray<Entity> enemiesBackstab;
 	private Entity player;
 	
 	private ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
@@ -27,8 +29,10 @@ public class AIMovementSystem extends EntitySystem {
 	@Override
 	@SuppressWarnings("unchecked")
 	public void addedToEngine(Engine engine) {
-		entities = engine.getEntitiesFor(Family.getFor(PositionComponent.class, VelocityComponent.class,
+		enemiesFollow = engine.getEntitiesFor(Family.getFor(PositionComponent.class, VelocityComponent.class,
 				AIMovementComponent.class));
+		enemiesBackstab = engine.getEntitiesFor(Family.getFor(PositionComponent.class, VelocityComponent.class,
+				AIMovementBackstabComponent.class));
 		super.addedToEngine(engine);
 	}
 	
@@ -36,14 +40,14 @@ public class AIMovementSystem extends EntitySystem {
 	public void update(float deltaTime) {
 		PositionComponent position;
 		VelocityComponent velocity;
-		PositionComponent playerPosition;
+		PositionComponent playerPosition = pm.get(player);;
 		Vector2 direction = new Vector2();
+		float relativeAngle = 0f;
 		
-		for (int i = 0; i < entities.size(); i++) {
-			Entity e = entities.get(i);
+		for (int i = 0; i < enemiesFollow.size(); i++) {
+			Entity e = enemiesFollow.get(i);
 			position = pm.get(e);
 			velocity = vm.get(e);
-			playerPosition = pm.get(player);
 	
 			// Simply accelerates the enemy towards the player 
 			direction.set(playerPosition.x, playerPosition.y);
@@ -51,8 +55,30 @@ public class AIMovementSystem extends EntitySystem {
 			if (direction.len() > 1f) {
 				direction.nor();
 			}
-			velocity.x += direction.x * 10;
-			velocity.y += direction.y * 10;
+			velocity.x += direction.x * 10f;
+			velocity.y += direction.y * 10f;
+		}
+		
+		// Having these two for-loops feels like I should have two separate systems.
+		for (int i = 0; i < enemiesBackstab.size(); i++) {
+			Entity e = enemiesBackstab.get(i);
+			position = pm.get(e);
+			velocity = vm.get(e);
+			
+			// If the player is looking, move very slowly. Otherwise move towards player
+			direction.set(playerPosition.x, playerPosition.y);
+			direction.sub(position.x, position.y);
+			direction.nor();
+			relativeAngle = Math.abs(playerPosition.angle - direction.angle()); 
+			if (relativeAngle > 90f && relativeAngle < 270f) {
+//				velocity.x = 0;
+//				velocity.y = 0;
+				velocity.x = direction.x * 25f;
+				velocity.y = direction.y * 25f;
+			} else {
+				velocity.x = direction.x * 1000f;
+				velocity.y = direction.y * 1000f;
+			}
 		}
 		
 	}
