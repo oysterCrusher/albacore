@@ -27,7 +27,7 @@ public class Scoring {
 	
 	public void render(SpriteBatch batch) {
 		float x = 0.5f * (1280f - Assets.fontOstrichSansRegular64.getBounds(scoreString).width);
-		Assets.fontOstrichSansRegular64.draw(batch, scoreString, x, 710);
+		Assets.fontOstrichSansRegular64.draw(batch, scoreString, x, 700);
 	}
 
 }

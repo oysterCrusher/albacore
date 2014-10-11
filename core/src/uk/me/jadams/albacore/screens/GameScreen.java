@@ -19,6 +19,7 @@ import uk.me.jadams.albacore.systems.BulletCollisionSystem;
 import uk.me.jadams.albacore.systems.EnemySpawnSystem;
 import uk.me.jadams.albacore.systems.LifetimeSystem;
 import uk.me.jadams.albacore.systems.MovementSystem;
+import uk.me.jadams.albacore.systems.PlayerEnemyCollisionSystem;
 import uk.me.jadams.albacore.systems.PlayerInputSystem;
 import uk.me.jadams.albacore.systems.RenderSystem;
 import uk.me.jadams.albacore.systems.ShootingSystem;
@@ -37,6 +38,8 @@ public class GameScreen implements Screen {
 	// Debug classes
 	private FPSLogger fpsLogger;
 //	private MemoryLogger memLogger;
+	
+	public boolean isRunning = true;
 	
 	private SpriteBatch batch;
 	
@@ -61,7 +64,9 @@ public class GameScreen implements Screen {
 		scoring.render(batch);
 		gameBoundary.render(batch);
 		batch.end();
-		engine.update(delta);
+		if (isRunning) {
+			engine.update(delta);
+		}
 		batch.begin();
 		cursor.render(batch);
 		batch.end();
@@ -125,6 +130,9 @@ public class GameScreen implements Screen {
 		
 		MovementSystem movementSystem = new MovementSystem();
 		engine.addSystem(movementSystem);
+		
+		PlayerEnemyCollisionSystem playerEnemyCollisionSystem = new PlayerEnemyCollisionSystem(this, player);
+		engine.addSystem(playerEnemyCollisionSystem);
 		
 		AnimationSystem animationSystem = new AnimationSystem();
 		engine.addSystem(animationSystem);
