@@ -1,5 +1,6 @@
 package uk.me.jadams.albacore.systems;
 
+import uk.me.jadams.albacore.components.AIMovementBouncyComponent;
 import uk.me.jadams.albacore.components.BulletComponent;
 import uk.me.jadams.albacore.components.PlayerInputComponent;
 import uk.me.jadams.albacore.components.PositionComponent;
@@ -27,6 +28,7 @@ public class BoundaryCollisionSystem extends EntitySystem {
 	private ComponentMapper<SizeComponent> sm;
 
 	private ImmutableArray<Entity> enemies;
+	private ImmutableArray<Entity> enemiesBounce;
 	private ImmutableArray<Entity> players;
 	private ImmutableArray<Entity> bullets;
 
@@ -44,11 +46,20 @@ public class BoundaryCollisionSystem extends EntitySystem {
 	public void addedToEngine(Engine engine) {
 		this.engine = engine;
 
-		// Get all the enemies
+		// Get all the enemies that ignore the boundaries
 		enemies = engine.getEntitiesFor(Family.getFor(
 				ComponentType.getBitsFor(PositionComponent.class, SizeComponent.class),
 				ComponentType.getBitsFor(),
-				ComponentType.getBitsFor(PlayerInputComponent.class, BulletComponent.class)));
+				ComponentType.getBitsFor(PlayerInputComponent.class, BulletComponent.class,
+						AIMovementBouncyComponent.class)));
+
+		// Enemies that bounce off the boundaries
+		enemiesBounce = engine.getEntitiesFor(Family.getFor(
+				ComponentType.getBitsFor(PositionComponent.class, SizeComponent.class,
+						AIMovementBouncyComponent.class),
+						ComponentType.getBitsFor(),
+						ComponentType.getBitsFor(PlayerInputComponent.class, BulletComponent.class)));
+
 		players = engine.getEntitiesFor(Family.getFor(PositionComponent.class,
 				VelocityComponent.class, SizeComponent.class, PlayerInputComponent.class));
 		bullets =  engine.getEntitiesFor(Family.getFor(BulletComponent.class,
@@ -127,7 +138,7 @@ public class BoundaryCollisionSystem extends EntitySystem {
 					effects.start(boundary.getLeft(), position.y);
 				}
 			}
-			
+
 			// Top boundary
 			if (position.x < boundary.getRight() && position.x > boundary.getLeft()) {
 				if (p0y > boundary.getTop() && p1y <= boundary.getTop()) {
@@ -136,7 +147,7 @@ public class BoundaryCollisionSystem extends EntitySystem {
 					effects.start(position.x, boundary.getTop());
 				}
 			}
-			
+
 			// Bottom boundary
 			if (position.x < boundary.getRight() && position.x > boundary.getLeft()) {
 				if (p0y > boundary.getBottom() && p1y <= boundary.getBottom()) {
@@ -145,7 +156,39 @@ public class BoundaryCollisionSystem extends EntitySystem {
 					effects.start(position.x, boundary.getBottom());
 				}
 			}
-			
+
+		}
+
+		// Bounce the enemies with AIMovementBounceComponent off the boundaries if they try to leave
+		// This routine reflects the velocities but not the positions, i.e. isn't physically
+		// accurate reflection. To achieve that, this routine should be incorporated in the
+		// movementSystem or as a post-movement update of position and velocity.
+		for (int i = 0; i < enemiesBounce.size(); i++) {
+			Entity e = enemiesBounce.get(i);
+			position = pm.get(e);
+			velocity = vm.get(e);
+			size = sm.get(e);
+			radius = size.size * 0.5f;
+
+			if (velocity.x < 0) {
+				if (position.x - radius + velocity.x * deltaTime <= boundary.getLeft()) {
+					velocity.x = -velocity.x;
+				}
+			} else if (velocity.x > 0) {
+				if (position.x + radius + velocity.x * deltaTime >= boundary.getRight()) {
+					velocity.x = -velocity.x;
+				}
+			}
+
+			if (velocity.y < 0) {
+				if (position.y - radius + velocity.y * deltaTime <= boundary.getBottom()) {
+					velocity.y = -velocity.y;
+				}
+			} else if (velocity.y > 0) {
+				if (position.y + radius + velocity.y * deltaTime >= boundary.getTop()) {
+					velocity.y = -velocity.y;
+				}
+			}
 		}
 
 		// For bullets, remove them if they collide with the boundary.

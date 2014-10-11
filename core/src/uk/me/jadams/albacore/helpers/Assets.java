@@ -9,6 +9,7 @@ public class Assets {
 	public static Texture player;
 	public static Texture enemy;
 	public static Texture enemyGreen;
+	public static Texture enemyPurple;
 	public static Texture bullet;
 	public static Texture cursor;
 	public static Texture boundary;
@@ -22,6 +23,7 @@ public class Assets {
 		player = loadTexture("player.png");
 		enemy = loadTexture("enemy.png");
 		enemyGreen = loadTexture("enemy_green.png");
+		enemyPurple = loadTexture("enemy_purple.png");
 		bullet = loadTexture("bullet.png");
 		cursor = loadTexture("cursor.png");
 		boundary = loadTexture("boundary.png");
@@ -32,6 +34,7 @@ public class Assets {
 		player.dispose();
 		enemy.dispose();
 		enemyGreen.dispose();
+		enemyPurple.dispose();
 		bullet.dispose();
 		cursor.dispose();
 		boundary.dispose();

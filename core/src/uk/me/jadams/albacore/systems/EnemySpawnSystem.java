@@ -1,5 +1,6 @@
 package uk.me.jadams.albacore.systems;
 
+import uk.me.jadams.albacore.components.AIMovementBouncyComponent;
 import uk.me.jadams.albacore.components.AIMovementComponent;
 import uk.me.jadams.albacore.components.PositionComponent;
 import uk.me.jadams.albacore.components.SizeComponent;
@@ -24,6 +25,9 @@ public class EnemySpawnSystem extends EntitySystem {
 	
 	private float greenTimer = 0f;
 	private float greenSpawnTime = 4f;
+	
+	private float purpleTimer = 0f;
+	private float purpleSpawnTime = 4f;
 
 	public EnemySpawnSystem(Boundary bounds) {
 		this.bounds = bounds;
@@ -52,6 +56,13 @@ public class EnemySpawnSystem extends EntitySystem {
 			greenSpawnTime *= 0.98f;
 			greenTimer = greenSpawnTime;
 			spawnGreenWave(MathUtils.floor(MathUtils.random() * 4f));
+		}
+		
+		purpleTimer -= deltaTime;
+		if (purpleTimer <= 0f) {
+			purpleSpawnTime *= 0.98f;
+			purpleTimer = purpleSpawnTime;
+			spawnPurpleWave();
 		}
 	}
 
@@ -139,6 +150,42 @@ public class EnemySpawnSystem extends EntitySystem {
 			
 			engine.addEntity(e);
 		}
+	}
+	
+	private void spawnPurpleWave() {
+		float size = 36f;
+		float speed = 130f;
+		
+		// From somewhere near the lower left corner
+		spawnPurple(-30 - size + MathUtils.random(-30f, 30f),
+				-30 - size + MathUtils.random(-30f, 30f),
+				speed, speed);
+		// Lower right
+		spawnPurple(1280 + 30 + size + MathUtils.random(-30f, 30f),
+				-30 - size + MathUtils.random(-30f, 30f),
+				-speed, speed);
+		// Upper left
+		spawnPurple(-30 - size + MathUtils.random(-30f, 30f),
+				720 + 30 + size + MathUtils.random(-30f, 30f),
+				speed, speed);
+		// Upper right
+		spawnPurple(1280 + 30 + size + MathUtils.random(-30f, 30f),
+				720 + 30 + size + MathUtils.random(-30f, 30f),
+				-speed, -speed);
+		
+
+	}
+	
+	// Need to decide what to do about entity generation like this.
+	// Maybe some entity factories and data classes with the fixed data for each enemy?
+	private void spawnPurple(float x, float y, float vx, float vy) {
+		Entity e = new Entity();
+		e.add(new PositionComponent(x, y, 0));
+		e.add(new VelocityComponent(vx, vy, 250f));
+		e.add(new SizeComponent(36f));
+		e.add(new TextureComponent(new TextureRegion(Assets.enemyPurple)));
+		e.add(new AIMovementBouncyComponent());
+		engine.addEntity(e);
 	}
 
 }
