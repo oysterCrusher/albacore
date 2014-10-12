@@ -57,6 +57,7 @@ public class AIMovementSystem extends EntitySystem {
 			}
 			velocity.x += direction.x * 10f;
 			velocity.y += direction.y * 10f;
+			position.angle = direction.angle();
 		}
 		
 		// Having these two for-loops feels like I should have two separate systems.

@@ -161,7 +161,7 @@ public class EnemySpawnSystem extends EntitySystem {
 		for (int i = 0; i < n; i++) {
 			Entity e = new Entity();
 			e.add(new PositionComponent(x + i * dx, y + i * dy, 0));
-			e.add(new VelocityComponent(vx, vy, speed));
+			e.add(new VelocityComponent(vx, vy, speed, (1 - 2 * (i%2)) * 180, 180));
 			e.add(new SizeComponent(size));
 			e.add(new TextureComponent(new TextureRegion(Assets.enemyGreen)));
 			e.add(new ExplodesComponent(ExplosionType.GREEN_COG));
@@ -200,7 +200,7 @@ public class EnemySpawnSystem extends EntitySystem {
 	private void spawnPurple(float x, float y, float vx, float vy) {
 		Entity e = new Entity();
 		e.add(new PositionComponent(x, y, 0));
-		e.add(new VelocityComponent(vx, vy, 250f));
+		e.add(new VelocityComponent(vx, vy, 250f, MathUtils.random(-60, 60), 60f));
 		e.add(new SizeComponent(36f));
 		e.add(new TextureComponent(new TextureRegion(Assets.enemyPurple)));
 		e.add(new AIMovementBouncyComponent());

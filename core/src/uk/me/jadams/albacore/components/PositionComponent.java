@@ -5,7 +5,7 @@ import com.badlogic.ashley.core.Component;
 public class PositionComponent extends Component {
 	public float x = 640f;
 	public float y = 360f;
-	public float angle = 0f;
+	public float angle = 0f; // Forward direction, in degrees. 
 
 	public PositionComponent() {
 

@@ -7,6 +7,7 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 public class MovementSystem extends IteratingSystem {
@@ -32,6 +33,15 @@ public class MovementSystem extends IteratingSystem {
 		
 		position.x += v.x * deltaTime;
 		position.y += v.y * deltaTime;
+		
+		// Cap the angular velocity.
+		velocity.omega = MathUtils.clamp(velocity.omega, -velocity.omegaMax, velocity.omegaMax);
+		position.angle += velocity.omega * deltaTime;
+		if (position.angle > 360f) {
+			position.angle -= 360f;
+		} else if (position.angle < 0f) {
+			position.angle += 360f;
+		}
 	}
 	
 }
