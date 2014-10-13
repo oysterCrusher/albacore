@@ -1,5 +1,6 @@
 package uk.me.jadams.albacore.screens;
 
+import uk.me.jadams.albacore.Albacore;
 import uk.me.jadams.albacore.components.PlayerInputComponent;
 import uk.me.jadams.albacore.components.PositionComponent;
 import uk.me.jadams.albacore.components.SizeComponent;
@@ -31,16 +32,13 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class GameScreen implements Screen {
 	
-	// Debug classes
-	private FPSLogger fpsLogger;
-//	private MemoryLogger memLogger;
+	private Albacore game;
 	
 	public boolean isRunning = true;
 	
@@ -55,10 +53,12 @@ public class GameScreen implements Screen {
 	
 	private ParticleExplosions particleExplosions;
 	
+	public GameScreen(Albacore game) {
+		this.game = game;
+	}
+	
 	@Override
 	public void render(float delta) {
-		fpsLogger.log();
-//		memLogger.log();		
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		particleExplosions.render(batch, delta);
@@ -67,6 +67,8 @@ public class GameScreen implements Screen {
 		batch.end();
 		if (isRunning) {
 			engine.update(delta);
+		} else {
+			game.setScreen(new MainMenuScreen(game));
 		}
 		batch.begin();
 		cursor.render(batch);
@@ -81,10 +83,6 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void show() {
-		
-		fpsLogger = new FPSLogger();
-//		memLogger = new MemoryLogger();
-		
 		// Messing around with particles
 		particleExplosions = new ParticleExplosions();
 		
@@ -164,8 +162,8 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void hide() {
-		// TODO Auto-generated method stub
-		
+		Gdx.input.setInputProcessor(null);
+		Gdx.input.setCursorCatched(false);
 	}
 
 	@Override

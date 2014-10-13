@@ -40,6 +40,10 @@ public class Boundary {
 		return boundingRect.height;
 	}
 	
+	public boolean isInside(float x, float y) {
+		return boundingRect.contains(x, y);
+	}
+	
 	public void render(SpriteBatch batch) {
 		// Left edge
 		batch.draw(boundaryTexture,

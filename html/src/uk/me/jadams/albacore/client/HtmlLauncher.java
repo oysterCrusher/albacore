@@ -3,7 +3,7 @@ package uk.me.jadams.albacore.client;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
-import uk.me.jadams.albacore.albacore;
+import uk.me.jadams.albacore.Albacore;
 
 public class HtmlLauncher extends GwtApplication {
 
@@ -14,6 +14,6 @@ public class HtmlLauncher extends GwtApplication {
 
         @Override
         public ApplicationListener getApplicationListener () {
-                return new albacore();
+                return new Albacore();
         }
 }
