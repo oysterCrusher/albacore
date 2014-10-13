@@ -7,7 +7,9 @@ import uk.me.jadams.albacore.components.PositionComponent;
 import uk.me.jadams.albacore.components.SizeComponent;
 import uk.me.jadams.albacore.components.VelocityComponent;
 import uk.me.jadams.albacore.helpers.Boundary;
-import uk.me.jadams.albacore.helpers.Particles;
+import uk.me.jadams.albacore.helpers.ParticleExplosions;
+import uk.me.jadams.albacore.helpers.ParticleExplosions.ExplosionType;
+import uk.me.jadams.albacore.helpers.ParticleExplosions.SprayType;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.ComponentType;
@@ -16,12 +18,13 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.math.Vector2;
 
 public class BoundaryCollisionSystem extends EntitySystem {
 
 	private Boundary boundary;
 	private Engine engine;
-	private Particles effects;
+	private ParticleExplosions particleExplosions;
 
 	private ComponentMapper<PositionComponent> pm;
 	private ComponentMapper<VelocityComponent> vm;
@@ -32,9 +35,9 @@ public class BoundaryCollisionSystem extends EntitySystem {
 	private ImmutableArray<Entity> players;
 	private ImmutableArray<Entity> bullets;
 
-	public BoundaryCollisionSystem(Boundary boundary, Particles effects) {
+	public BoundaryCollisionSystem(Boundary boundary, ParticleExplosions particleExplosions) {
 		this.boundary = boundary;
-		this.effects = effects;
+		this.particleExplosions = particleExplosions;
 
 		pm = ComponentMapper.getFor(PositionComponent.class);
 		vm = ComponentMapper.getFor(VelocityComponent.class);
@@ -123,36 +126,44 @@ public class BoundaryCollisionSystem extends EntitySystem {
 			// Right boundary
 			if (position.y < boundary.getTop() && position.y > boundary.getBottom()) {
 				if (p0x > boundary.getRight() && p1x <= boundary.getRight()) {
-					effects.start(boundary.getRight(), position.y);
+					particleExplosions.start(ExplosionType.WHITE_SQUARE,
+							boundary.getRight(), position.y);
 				} else if (p0x <= boundary.getRight() && p1x > boundary.getRight()) {
-					effects.start(boundary.getRight(), position.y);
+					particleExplosions.start(ExplosionType.WHITE_SQUARE,
+							boundary.getRight(), position.y);
 				}
 			}
 
 			// Left boundary
 			if (position.y < boundary.getTop() && position.y > boundary.getBottom()) {
 				if (p0x > boundary.getLeft() && p1x <= boundary.getLeft()) {
-					effects.start(boundary.getLeft(), position.y);
+					particleExplosions.start(ExplosionType.WHITE_SQUARE,
+							boundary.getLeft(), position.y);
 				} else if (p0x <= boundary.getLeft() && p1x > boundary.getLeft()) {
-					effects.start(boundary.getLeft(), position.y);
+					particleExplosions.start(ExplosionType.WHITE_SQUARE,
+							boundary.getLeft(), position.y);
 				}
 			}
 
 			// Top boundary
 			if (position.x < boundary.getRight() && position.x > boundary.getLeft()) {
 				if (p0y > boundary.getTop() && p1y <= boundary.getTop()) {
-					effects.start(position.x, boundary.getTop());
+					particleExplosions.start(ExplosionType.WHITE_SQUARE,
+							position.x, boundary.getTop());
 				} else if (p0y <= boundary.getTop() && p1y > boundary.getTop()) {
-					effects.start(position.x, boundary.getTop());
+					particleExplosions.start(ExplosionType.WHITE_SQUARE,
+							position.x, boundary.getTop());
 				}
 			}
 
 			// Bottom boundary
 			if (position.x < boundary.getRight() && position.x > boundary.getLeft()) {
 				if (p0y > boundary.getBottom() && p1y <= boundary.getBottom()) {
-					effects.start(position.x, boundary.getBottom());
+					particleExplosions.start(ExplosionType.WHITE_SQUARE,
+							position.x, boundary.getBottom());
 				} else if (p0y <= boundary.getBottom() && p1y > boundary.getBottom()) {
-					effects.start(position.x, boundary.getBottom());
+					particleExplosions.start(ExplosionType.WHITE_SQUARE,
+							position.x, boundary.getBottom());
 				}
 			}
 
@@ -197,24 +208,39 @@ public class BoundaryCollisionSystem extends EntitySystem {
 			velocity = vm.get(b);
 			size = sm.get(b);
 			radius = size.size * 0.5f;
+			float angle = new Vector2(velocity.x, velocity.y).angle();
+			float angleRange = 30f;
+			
 
 			if (velocity.x < 0) {
 				if (position.x - radius + velocity.x * deltaTime <= boundary.getLeft()) {
 					engine.removeEntity(b);
+					particleExplosions.start(SprayType.WHITE_SQUARE,
+							boundary.getLeft(), position.y,
+							angle - angleRange, angle + angleRange);
 				}
 			} else if (velocity.x > 0) {
 				if (position.x + radius + velocity.x * deltaTime >= boundary.getRight()) {
 					engine.removeEntity(b);
+					particleExplosions.start(SprayType.WHITE_SQUARE,
+							boundary.getRight(), position.y,
+							angle - angleRange, angle + angleRange);
 				}
 			}
 
 			if (velocity.y < 0) {
 				if (position.y - radius + velocity.y * deltaTime <= boundary.getBottom()) {
 					engine.removeEntity(b);
+					particleExplosions.start(SprayType.WHITE_SQUARE,
+							position.x, boundary.getBottom(),
+							angle - angleRange, angle + angleRange);
 				}
 			} else if (velocity.y > 0) {
 				if (position.y + radius + velocity.y * deltaTime >= boundary.getTop()) {
 					engine.removeEntity(b);
+					particleExplosions.start(SprayType.WHITE_SQUARE,
+							position.x, boundary.getTop(),
+							angle - angleRange, angle + angleRange);
 				}
 			}			
 		}

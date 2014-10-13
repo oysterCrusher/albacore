@@ -11,7 +11,6 @@ import uk.me.jadams.albacore.helpers.Boundary;
 import uk.me.jadams.albacore.helpers.Cursor;
 import uk.me.jadams.albacore.helpers.Input;
 import uk.me.jadams.albacore.helpers.ParticleExplosions;
-import uk.me.jadams.albacore.helpers.Particles;
 import uk.me.jadams.albacore.helpers.Scoring;
 import uk.me.jadams.albacore.systems.AIMovementSystem;
 import uk.me.jadams.albacore.systems.AnimationSystem;
@@ -54,7 +53,6 @@ public class GameScreen implements Screen {
 	private Cursor cursor;
 	private Scoring scoring;
 	
-	private Particles smallWhite;
 	private ParticleExplosions particleExplosions;
 	
 	@Override
@@ -63,7 +61,6 @@ public class GameScreen implements Screen {
 //		memLogger.log();		
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
-		smallWhite.render(batch, delta);
 		particleExplosions.render(batch, delta);
 		scoring.render(batch);
 		gameBoundary.render(batch);
@@ -89,7 +86,6 @@ public class GameScreen implements Screen {
 //		memLogger = new MemoryLogger();
 		
 		// Messing around with particles
-		smallWhite = new Particles("white_puff.p");
 		particleExplosions = new ParticleExplosions();
 		
 		batch = new SpriteBatch();
@@ -129,7 +125,7 @@ public class GameScreen implements Screen {
 		AIMovementSystem AIMovementSystem = new AIMovementSystem(player);
 		engine.addSystem(AIMovementSystem);
 		
-		BoundaryCollisionSystem boundaryCollisionSystem = new BoundaryCollisionSystem(gameBoundary, smallWhite);
+		BoundaryCollisionSystem boundaryCollisionSystem = new BoundaryCollisionSystem(gameBoundary, particleExplosions);
 		engine.addSystem(boundaryCollisionSystem);
 		
 		MovementSystem movementSystem = new MovementSystem();
@@ -187,7 +183,6 @@ public class GameScreen implements Screen {
 	@Override
 	public void dispose() {
 		particleExplosions.dispose();
-		smallWhite.dispose();
 		Assets.dispose();
 	}
 
